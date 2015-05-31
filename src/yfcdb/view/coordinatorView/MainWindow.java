@@ -89,27 +89,7 @@ public class MainWindow extends JFrame {
         }
     }
 
-    private class MembersTablePanel extends JPanel {
-        private MembersTablePanel() {
-            setLayout(new BorderLayout());
-            JLabel jlTitle = new JLabel("Members List");
 
-            String[] columnNames = {"Last Name", "First Name", "Age"};
-            DefaultTableModel defaultTableModel = new DefaultTableModel(columnNames, 0);
-            defaultTableModel.addRow(new Object[] {"Torres", "Jat", 3});
-            defaultTableModel.addRow(new Object[] {"Torres", "Cheslie", 16});
-            defaultTableModel.addRow(new Object[] {"Torres", "Elsie", 48798});
-
-            JTable jtMembers = new JTable(defaultTableModel);
-            ListSelectionModel listSelectionModel = jtMembers.getSelectionModel();
-            listSelectionModel.addListSelectionListener(new ListSelectionHandler());
-            jtMembers.setSelectionModel(listSelectionModel);
-
-
-            add(jlTitle, BorderLayout.NORTH);
-            add(new JScrollPane(jtMembers), BorderLayout.CENTER);
-        }
-    }
 
     private class LeadersTablePanel extends JPanel {
         private LeadersTablePanel() {
@@ -162,21 +142,13 @@ public class MainWindow extends JFrame {
         }
     }
 
-    @Deprecated
-    private class ListSelectionHandler implements ListSelectionListener {
-
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-
-        }
-    }
-
     public MainWindow() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMenuBar(setupMenuBar());
         setPreferredSize(preferredSize);
 
         centerPanel = new JPanel();
+        centerPanel = new EventsInfoPanel("New Event");
 
         add(new SidePanel(), BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
@@ -203,9 +175,14 @@ public class MainWindow extends JFrame {
         Menu mEdit = new Menu("Edit");
         Menu mView = new Menu("View");
 
+        Menu mEvents = new Menu("Events");
+        MenuItem miAddEvent = new MenuItem("Add event");
+        mEvents.add(miAddEvent);
+
         menuBar.add(mFile);
         menuBar.add(mEdit);
         menuBar.add(mView);
+        menuBar.add(mEvents);
 
         return menuBar;
     }

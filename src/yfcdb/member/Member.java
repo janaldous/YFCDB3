@@ -216,4 +216,8 @@ public class Member extends Person {
     public void setPosition(Position position) {
         this.position = position;
     }
+
+    public String[] toAttendanceArray() {
+        return new String[] {this.toString(), ""};
+    }
 }
