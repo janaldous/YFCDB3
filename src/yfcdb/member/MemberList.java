@@ -22,6 +22,10 @@ public class MemberList {
         return memberList;
     }
 
+    public static void addMember(Member member) {
+        memberArrayList.add(member);
+    }
+
     public void populateList() {
         YFCGroup chapterC = new YFCGroup("C", "C");
         Address address = new Address("109 Mahogany", "Sta Rosa", "SRVI", "4026");
@@ -62,5 +66,18 @@ public class MemberList {
 
         memberArrayList.add(jat);
         memberArrayList.add(chelsie);
+    }
+
+    public boolean contains(Member member) {
+        if (memberArrayList.contains(member)) return true;
+        return false;
+    }
+
+    public void print() {
+        for (Member member: memberArrayList) {
+            System.out.println(member);
+        }
+
+        System.out.println(memberArrayList.size());
     }
 }

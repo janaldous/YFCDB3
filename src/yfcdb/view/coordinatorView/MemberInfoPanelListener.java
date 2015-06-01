@@ -1,6 +1,7 @@
 package yfcdb.view.coordinatorView;
 
 import yfcdb.member.Member;
+import yfcdb.member.MemberList;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -30,9 +31,6 @@ public class MemberInfoPanelListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         boolean success = true;
-        if (!panels.get(0).isFilledOut()) {
-            memberInfoPanel.setMember(new Member());
-        }
         for (FormPanel panel: panels) {
             if (!panel.isFilledOut()) {
                 success = false;
@@ -41,6 +39,14 @@ public class MemberInfoPanelListener implements ActionListener {
         if (success) {
             JOptionPane.showMessageDialog(null, "Success");
             memberInfoPanel.updateMember();
+            MemberList memberList = MemberList.getInstance();
+            Member member = memberInfoPanel.getMember();
+            if (!memberList.contains(member)) {
+                memberList.addMember(member);
+                memberList.print();
+            }
+
+
         } else {
             JOptionPane.showMessageDialog(null, "Not filled out");
         }

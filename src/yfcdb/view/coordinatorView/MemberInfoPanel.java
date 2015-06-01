@@ -3,6 +3,7 @@ package yfcdb.view.coordinatorView;
 import yfcdb.member.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -102,6 +103,12 @@ public class MemberInfoPanel extends JPanel {
             jtfId.setText(String.valueOf(member.getID()));
             jtfDateLastUpdated.setText(member.getDateUpdated());
             jcbPosition.setSelectedItem(member.getPosition());
+            jtfAge.setText("0");
+            jtfYfcAge.setText("0");
+        }
+
+        public void setAge(int age) {
+            jtfAge.setText(String.valueOf(age));
         }
     }
 
@@ -165,7 +172,7 @@ public class MemberInfoPanel extends JPanel {
             setBorder(BorderFactory.createTitledBorder("Other"));
             setLayout(new GridLayout(2,1));
             JLabel jlBirthday = new JLabel("Birthday *:");
-            dpBirthday = new DatePanel();
+            dpBirthday = new DatePanel(briefingPanel);
 
 
             JLabel jlGender = new JLabel("Gender *:");
@@ -437,11 +444,11 @@ public class MemberInfoPanel extends JPanel {
             String mEmail = jtfMotherEmail.getText();
             String mOccupation = jtfMotherOccupation.getText();
 
-            if (!(member.getFather().getPerson() instanceof Coordinator)) {
+            if (member.getFather() != null && !(member.getFather().getPerson() instanceof Coordinator)) {
                 Parent father = new Parent("Father", fName, fOccupation, fContact, fEmail);
                 member.setFather(father);
             }
-            if (!(member.getMother().getPerson() instanceof Coordinator)) {
+            if (member.getMother() != null && !(member.getMother().getPerson() instanceof Coordinator)) {
                 Parent mother = new Parent("Mother", mName, mOccupation, mContact, mEmail);
                 member.setMother(mother);
             }
@@ -455,14 +462,12 @@ public class MemberInfoPanel extends JPanel {
         private OtherEmergencyContactPanel otherEmergencyContactPanel;
         private class OtherEmergencyContactPanel extends JPanel {
             private OtherEmergencyContactPanel() {
-                super(new GridLayout(1, 6));
-
                 JLabel jlName = new JLabel("Name:");
-                jtfName = new JTextField();
+                jtfName = new JTextField(15);
                 JLabel jlRelation = new JLabel("Relationship:");
-                jtfRelation = new JTextField();
+                jtfRelation = new JTextField(10);
                 JLabel jlContact = new JLabel("Contact:");
-                jtfContact = new JTextField();
+                jtfContact = new JTextField(15);
 
                 add(jlName);
                 add(jtfName);
@@ -646,6 +651,7 @@ public class MemberInfoPanel extends JPanel {
 
     public MemberInfoPanel() {
         setLayout(new GridBagLayout());
+        setBorder(new EmptyBorder(20, 20, 20, 20) );
 
         GridBagConstraints c = new GridBagConstraints();
         c.weightx = 0.5; c.weighty = 0.5;
@@ -704,7 +710,11 @@ public class MemberInfoPanel extends JPanel {
     public MemberInfoPanel(Member member) {
         this();
         this.member = member;
-        setInfo(member);
+        if (member.getFirstName() == null) {
+            briefingPanel.setInfoForNewMember(member);
+        } else {
+            setInfo(member);
+        }
     }
 
     public void setInfo(Member member) {
@@ -722,4 +732,7 @@ public class MemberInfoPanel extends JPanel {
     public void setMember(Member member) {
         this.member = member;
     }
+
+    public Member getMember() { return member; }
+
 }

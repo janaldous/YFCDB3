@@ -1,5 +1,7 @@
 package yfcdb.view.coordinatorView;
 
+import yfcdb.member.Member;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +19,13 @@ public class DatePanel extends JPanel implements ActionListener {
 
     private JComboBox jcbMonth, jcbDay, jcbYear;
 
+    private MemberInfoPanel.BriefingPanel personalPanel;
+
+    public DatePanel(MemberInfoPanel.BriefingPanel personalPanel) {
+        this();
+        this.personalPanel = personalPanel;
+    }
+
     public DatePanel() {
         super(new FlowLayout(FlowLayout.LEFT));
 
@@ -31,14 +40,17 @@ public class DatePanel extends JPanel implements ActionListener {
         jcbMonth = new JComboBox(monthList);
         int currentMonth = cal.get(Calendar.MONTH);
         jcbMonth.setSelectedIndex(currentMonth);
+        jcbMonth.addActionListener(this);
 
         //day
         jcbDay = new JComboBox(dayList);
         int currentDay = cal.get(Calendar.DATE);
         jcbDay.setSelectedItem(Integer.toString(currentDay));
+        jcbDay.addActionListener(this);
 
         //year
         jcbYear = new JComboBox(yearList);
+        jcbYear.addActionListener(this);
 
         add(jcbMonth);
         add(jcbDay);
@@ -50,8 +62,10 @@ public class DatePanel extends JPanel implements ActionListener {
         int month = jcbMonth.getSelectedIndex() - 1;
         int day = Integer.parseInt((String)jcbYear.getSelectedItem());
 
+        System.out.println(year);
+
         Calendar c = Calendar.getInstance();
-        c.set(year, month-1, day);
+        c.set(year, month, day);
         Date date = c.getTime();
 
         Calendar calBirthday = Calendar.getInstance();
@@ -92,6 +106,6 @@ public class DatePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        personalPanel.setAge(getYearsFromToday());
     }
 }

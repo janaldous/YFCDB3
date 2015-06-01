@@ -16,22 +16,25 @@ public class Event {
     private static int id = 0;
     private String name, venue, notes;
     private EventType type;
-    private int regFee, noOfAttendees, timeStart, timeEnd;
-    private Date date;
+    private int regFee, noOfAttendees;
+    private Date startDate, endDate;
     private ArrayList<Attendee> attendees = new ArrayList<Attendee>();
 
-    public Event(String name, EventType type, String venue, String notes, int regFee, int dd, int mm, int yyyy,
-                 int time_start, int time_end)
+    public Event(String name, EventType type, String venue, String notes, int regFee, Date startDate, Date endDate)
     {
-        id++;
+        this();
         this.name = name;
         this.type = type;
         this.venue = venue;
         this.notes = notes;
         this.regFee = regFee;
-        setDate(dd, mm, yyyy);
-        setTimes(time_start, time_end);
+        setStartDate(startDate);
+        setEndDate(endDate);
         //EventList.addEvent(this);
+    }
+
+    public Event() {
+        id++;
     }
 
     /**
@@ -121,30 +124,30 @@ public class Event {
      * gets timeStart
      * @return the timeStart
      */
-    public int getTimeStart() {
-        return timeStart;
+    public Date getStartDate() {
+        return startDate;
     }
 
     /**
-     * @param timeStart the timeStart to set
+     * @param startDate the timeStart to set
      */
-    public void setTimeStart(int timeStart) {
-        this.timeStart = timeStart;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
     /**
      * gets timeEnd
      * @return the timeEnd
      */
-    public int getTimeEnd() {
-        return timeEnd;
+    public Date getEndDate() {
+        return endDate;
     }
 
     /**
-     * @param timeEnd the timeEnd to set
+     * @param endDate the timeEnd to set
      */
-    public void setTimeEnd(int timeEnd) {
-        this.timeEnd = timeEnd;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     /**
@@ -154,46 +157,8 @@ public class Event {
         Event.id = id;
     }
 
-    /**
-     * @param date the date to set
-     */
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    private void setDate(int mm, int dd, int yyyy)
-    {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.MONTH, mm-1);
-        cal.set(Calendar.DATE, dd);
-        cal.set(Calendar.YEAR, yyyy);
-        date = cal.getTime();
-    }
-
     public String getId() {
         return Integer.toString(id);
-    }
-
-    public String getStringDate()
-    {
-        DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
-        return dateFormat.format(this.date);
-    }
-
-    public Date getDate()
-    {
-        return this.date;
-    }
-
-    public String getTimes()
-    {
-        return timeStart + "-" + timeEnd;
-    }
-
-    private void setTimes(int start, int end)
-    {
-        timeStart = start;
-        timeEnd = end;
     }
 
     public void addAttendee(Person p, Role r)
@@ -205,24 +170,30 @@ public class Event {
 
     public String toString()
     {
-        String message = "";
+//        String message = "";
+//
+//        message += "==================="
+//                + "\nEvent";
+//        message += "\nName: " + name
+//                + "\nType: " + type
+//                + "\nVenue: " + venue
+//                + "\nNotes: " + notes
+//                + "\nReg fee:" + regFee
+//                + "\nNo of attendees: " + noOfAttendees
+//                + "\nStart Date: " + getStartDate()
+//                + "\nEnd date: " + getEndDate();
+//
+//        for(Attendee attendee: attendees)
+//        {
+//            message += "\n" + attendee;
+//        }
+//        message += "\n===================";
+//        return message;
 
-        message += "==================="
-                + "\nEvent";
-        message += "\nName: " + name
-                + "\nType: " + type
-                + "\nVenue: " + venue
-                + "\nNotes: " + notes
-                + "\nReg fee:" + regFee
-                + "\nNo of attendees: " + noOfAttendees
-                + "\nDate: " + getDate()
-                + "\nTimes: " + getTimes();
+        return name + " (" + type + ")";
+    }
 
-        for(Attendee attendee: attendees)
-        {
-            message += "\n" + attendee;
-        }
-        message += "\n===================";
-        return message;
+    public Object[] toArray() {
+        return new Object[] {startDate, name, type, venue, noOfAttendees};
     }
 }

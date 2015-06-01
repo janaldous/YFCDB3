@@ -1,10 +1,10 @@
 package yfcdb.view.coordinatorView;
 
-
+import yfcdb.events.Event;
 import yfcdb.events.EventType;
+import yfcdb.member.Member;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,20 +12,14 @@ import java.util.Date;
 /**
  * Created by janaldoustorres on 23/05/15.
  */
-public class EventPanel extends JPanel {
-    private class TimePanel extends JPanel {
-        private TimePanel() {
-            JSpinner startSpinner = new JSpinner(new SpinnerDateModel());
-            startSpinner.setEditor(new JSpinner.DateEditor(startSpinner, "h:mm a"));
-            JSpinner endSpinner = new JSpinner(new SpinnerDateModel());
-            endSpinner.setEditor(new JSpinner.DateEditor(endSpinner, "h:mm a"));
-            JLabel jlDash = new JLabel("–");
-
-            add(startSpinner);
-            add(jlDash);
-            add(endSpinner);
-        }
-    }
+public class EventPanel extends EventFormPanel {
+    private Event event;
+    private final JTextField jtfEventName;
+    private final JComboBox<EventType> jcbEventType;
+    private final DatePan startDatePanel, endDatePanel;
+    private final JTextField jtfVenue;
+    private final JTextField jtfRegFee;
+    private final JTextField jtfNotes;
 
     private class DatePan extends JPanel {
         private DatePan() {
@@ -40,9 +34,17 @@ public class EventPanel extends JPanel {
                     latestDate,
                     Calendar.YEAR);
             JSpinner spinner = new JSpinner(model);
-            spinner.setEditor(new JSpinner.DateEditor(spinner, "MMM dd yyyy"));
+            spinner.setEditor(new JSpinner.DateEditor(spinner, "MMM dd yyyy HH: mm"));
 
             add(spinner);
+        }
+
+        private void setDate(Date date) {
+
+        }
+
+        private Date getDate() {
+            return null;
         }
     }
 
@@ -50,39 +52,83 @@ public class EventPanel extends JPanel {
         setLayout(new GridLayout(7,2));
 
         JLabel jlEventName = new JLabel("Name of Event *:");
-        JTextField jtfEventName = new JTextField();
+        jtfEventName = new JTextField();
 
         JLabel jlEventType = new JLabel("Type of Event *:");
-        JComboBox jcbEventType = new JComboBox<String>(EventType.getEventTypes());
+        jcbEventType = new JComboBox<EventType>(EventType.values());
 
-        JLabel jlDate = new JLabel("Date *:");
-        DatePan datePanel = new DatePan();
+        JLabel jlStartDate = new JLabel("Start Date *:");
+        startDatePanel = new DatePan();
 
-        JLabel jlTime = new JLabel("Time *:");
-        TimePanel timePanel = new TimePanel();
+        JLabel jlEndDate = new JLabel("End Date *:");
+        endDatePanel = new DatePan();
 
         JLabel jlVenue = new JLabel("Venue *:");
-        JTextField jtfVenue = new JTextField();
+        jtfVenue = new JTextField();
 
         JLabel jlRegFee = new JLabel("Reg Fee:");
-        JTextField jtfRegFee = new JTextField();
+        jtfRegFee = new JTextField();
 
         JLabel jlNotes = new JLabel("Notes:");
-        JTextField jtfNotes = new JTextField();
+        jtfNotes = new JTextField();
 
         add(jlEventName);
         add(jtfEventName);
         add(jlEventType);
         add(jcbEventType);
-        add(jlDate);
-        add(datePanel);
-        add(jlTime);
-        add(timePanel);
+        add(jlStartDate);
+        add(startDatePanel);
+        add(jlEndDate);
+        add(endDatePanel);
         add(jlVenue);
         add(jtfVenue);
         add(jlRegFee);
         add(jtfRegFee);
         add(jlNotes);
         add(jtfNotes);
+    }
+
+    @Override
+    public void setInfo(Event event) {
+        jtfEventName.setText(event.getName());
+        jcbEventType.setSelectedItem(event.getType());
+        startDatePanel.setDate(event.getStartDate());
+        endDatePanel.setDate(event.getEndDate());
+        jtfVenue.setText(event.getVenue());
+        jtfRegFee.setText(String.valueOf(event.getRegFee()));
+        jtfNotes.setText(event.getNotes());
+    }
+
+    @Override
+    public Event getInfo(Event event) {
+        String eventName = jtfEventName.getText();
+        EventType eventType = (EventType) jcbEventType.getSelectedItem();
+        Date start = startDatePanel.getDate();
+        Date end = endDatePanel.getDate();
+        String venue = jtfVenue.getText();
+        int regFee = Integer.parseInt(jtfRegFee.getText());
+        String notes = jtfNotes.getText();
+
+        event.setName(eventName);
+        event.setType(eventType);
+        event.setStartDate(start);
+        event.setEndDate(end);
+        event.setVenue(venue);
+        event.setRegFee(regFee);
+        event.setNotes(notes);
+
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void updateEvent() {
+        getInfo(event);
     }
 }

@@ -18,9 +18,9 @@ public class Tester {
         Person mom = new Coordinator(Prefix.TITA, "Elsie", "Turla", "Torres", "Elsie", chapterC);
         Person chels = new HouseholdLeader("chelsie", "erica", "torres", "chels", chapterC);
 
-        Event camp = new Event("Youthcamp2015", EventType.YOUTH_CAMP, "place", "notes", 200, 1, 2, 1994, 900, 1000);
-        camp.addAttendee(jat, Role.PRESENT);
-        camp.addAttendee(mom, Role.PRESENT);
+        //Event camp = new Event("Youthcamp2015", EventType.YOUTH_CAMP, "place", "notes", 200, 1, 2, 1994, 900, 1000);
+        //camp.addAttendee(jat, Role.PRESENT);
+        //camp.addAttendee(mom, Role.PRESENT);
 
         Household hh = new Household((HouseholdLeader)chels);
         hh.addMember(jat);
@@ -29,7 +29,7 @@ public class Tester {
         System.out.println(jat);
         System.out.println(mom);
         System.out.println(chels);
-        System.out.println(camp);
+        //System.out.println(camp);
         System.out.println(hh);
 
         hh.removeMember(jat);

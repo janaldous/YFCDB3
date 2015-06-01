@@ -25,4 +25,15 @@ public enum Role {
             default: return null;
         }
     }
+
+    public static String[] getRoles() {
+        Role[] roles = values();
+        String[] names = new String[roles.length];
+
+        for (int i = 0; i < roles.length; i++) {
+            names[i] = roles[i].toString();
+        }
+
+        return names;
+    }
 }

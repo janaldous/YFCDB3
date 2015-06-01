@@ -1,5 +1,7 @@
 package yfcdb.view.coordinatorView;
 
+import yfcdb.events.Event;
+import yfcdb.events.EventList;
 import yfcdb.member.Member;
 import yfcdb.member.MemberList;
 import yfcdb.member.Position;
@@ -19,7 +21,7 @@ import java.awt.event.MouseEvent;
  */
 public class MainWindow extends JFrame {
     private JPanel centerPanel;
-    private final static Dimension preferredSize = new Dimension(900, 700);
+    private final static Dimension preferredSize = new Dimension(1000, 700);
 
     private class SidePanel extends JPanel {
         private JTextField jtfSearchBar;
@@ -42,12 +44,22 @@ public class MainWindow extends JFrame {
                 public void mouseClicked(MouseEvent e) {
                     int doubleClick = 2;
                     JList list = (JList)e.getSource();
-                    if (e.getClickCount() == doubleClick) {// Double-click detected
-                        int index = list.locationToIndex(e.getPoint());
+                    if (list.getModel() == memberListModel) {
+                        if (e.getClickCount() == doubleClick) {// Double-click detected
+                            int index = list.locationToIndex(e.getPoint());
 
-                        Member memberToShow = (Member) memberListModel.getElementAt(index);
-                        changeCenterPanel(memberToShow);
+                            Member memberToShow = (Member) memberListModel.getElementAt(index);
+                            changeCenterPanelToMember(memberToShow);
+                        }
+                    } else if (list.getModel() == eventListModel) {
+                        if (e.getClickCount() == doubleClick) {// Double-click detected
+                            int index = list.locationToIndex(e.getPoint());
+
+                            Event eventToShow = (Event) eventListModel.getElementAt(index);
+                            changeCenterPanelToEvent(eventToShow);
+                        }
                     }
+
                 }
             });
 
@@ -60,6 +72,8 @@ public class MainWindow extends JFrame {
             jbMember.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    //TODO add observer here when a member is added/deleted
+                    populateMemberList();
                     jlistMembersList.setModel(memberListModel);
                 }
             });
@@ -68,6 +82,7 @@ public class MainWindow extends JFrame {
             jbEvent.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    populateEventList();
                     jlistMembersList.setModel(eventListModel);
                 }
             });
@@ -77,6 +92,7 @@ public class MainWindow extends JFrame {
         }
 
         private void populateMemberList() {
+            memberListModel.clear();
             MemberList memberList = MemberList.getInstance();
             for (Member member: memberList.getMemberArrayList()) {
                 memberListModel.addElement(member);
@@ -84,8 +100,11 @@ public class MainWindow extends JFrame {
         }
 
         private void populateEventList() {
-            eventListModel.addElement("YFC Camp");
-            eventListModel.addElement("YFC Chapter Assembly");
+            eventListModel.clear();
+            EventList eventList = EventList.getInstance();
+            for (Event event: eventList.getEventArrayList()) {
+                eventListModel.addElement(event);
+            }
         }
     }
 
@@ -109,51 +128,16 @@ public class MainWindow extends JFrame {
         }
     }
 
-    private class EventsTablePanel extends JPanel {
-        private EventsTablePanel() {
-            setLayout(new BorderLayout());
-            JLabel jlTitle = new JLabel("Events List");
-
-            String[] columnNames = {"Date", "Name", "Type", "Venue", "Attendees"};
-            DefaultTableModel defaultTableModel = new DefaultTableModel(columnNames, 0);
-            defaultTableModel.addRow(new String[] {"2/15/2013", "Parents Honoring", "PF", "SRE clubhouse", "3"});
-            defaultTableModel.addRow(new String[] {"2/14/2013", "Chapter Assembly", "CA", "JP2", "6"});
-            defaultTableModel.addRow(new String[] {"11,25,2012", "Chapter Assembly", "CA", "JP2", "5"});
-
-
-            JTable jtEventsTable = new JTable(defaultTableModel);
-            jtEventsTable.setSelectionModel(new TableSelectionModel());
-
-
-            add(jlTitle, BorderLayout.NORTH);
-            add(new JScrollPane(jtEventsTable), BorderLayout.CENTER);
-        }
-    }
-
-    private class TableSelectionModel extends DefaultListSelectionModel {
-        @Override
-        public void addListSelectionListener(ListSelectionListener l) {
-            super.addListSelectionListener(new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    System.out.println(e.getLastIndex());
-                }
-            });
-        }
-    }
-
     public MainWindow() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMenuBar(setupMenuBar());
         setPreferredSize(preferredSize);
 
         centerPanel = new JPanel();
-        centerPanel = new EventsInfoPanel("New Event");
+        //centerPanel = new JP("New Event");
 
         add(new SidePanel(), BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
-
-
 
         pack();
     }
@@ -162,47 +146,102 @@ public class MainWindow extends JFrame {
         MenuBar menuBar = new MenuBar();
         Menu mFile = new Menu("File");
         MenuItem miAbout = new MenuItem("About");
-        MenuItem miAddMember = new MenuItem("Add member");
-        miAddMember.addActionListener(new ActionListener() {
+        mFile.add(miAbout);
+        MenuItem miMakeReport = new MenuItem("Make report");
+        miMakeReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                changeCenterPanel();
+                new ReportWizardDialog().setVisible(true);
             }
         });
-        mFile.add(miAbout);
-        mFile.add(miAddMember);
+        mFile.add(miMakeReport);
 
         Menu mEdit = new Menu("Edit");
         Menu mView = new Menu("View");
 
         Menu mEvents = new Menu("Events");
         MenuItem miAddEvent = new MenuItem("Add event");
+        miAddEvent.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCenterPanelToNewEvent();
+            }
+        });
         mEvents.add(miAddEvent);
+        MenuItem miViewEvents = new MenuItem("View events table");
+        miViewEvents.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCenterPanelToEventTable();
+            }
+        });
+        mEvents.add(miViewEvents);
+
+        Menu mMember = new Menu("Member");
+        MenuItem miAddMember = new MenuItem("Add member");
+        miAddMember.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCenterPanelToNewMember();
+            }
+        });
+        mMember.add(miAddMember);
+        MenuItem miViewMembers = new MenuItem("View member table");
+        miViewMembers.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCenterPanelToMemberTable();
+            }
+        });
+        mMember.add(miViewMembers);
 
         menuBar.add(mFile);
         menuBar.add(mEdit);
         menuBar.add(mView);
         menuBar.add(mEvents);
+        menuBar.add(mMember);
 
         return menuBar;
     }
 
-    private void changeCenterPanel() {
-        remove(centerPanel);
+    private void changeCenterPanelToNewEvent() {
+        //TODO make MemberInfoPanel a singleton, to make it more efficient
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JLabel("<html><h1>New Event</h1></html>"), BorderLayout.NORTH);
+        panel.add(new EventsInfoPanel(), BorderLayout.CENTER);
+        changeCenterPanel(panel);
+    }
+
+    private void changeCenterPanelToNewMember() {
         //TODO make MemberInfoPanel a singleton, to make it more efficient
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel("<html><h1>New Member</h1></html>"), BorderLayout.NORTH);
-        panel.add(new MemberInfoPanel(), BorderLayout.CENTER);
-        centerPanel = panel;
-        add(centerPanel, BorderLayout.CENTER);
-        revalidate();
-        repaint();
+        panel.add(new JScrollPane(new MemberInfoPanel(new Member())), BorderLayout.CENTER);
+        changeCenterPanel(panel);
     }
 
-    private void changeCenterPanel(Member member) {
-        remove(centerPanel);
+    private void changeCenterPanelToMember(Member member) {
         //TODO make MemberInfoPanel a singleton, to make it more efficient
-        centerPanel = new MemberTabbedPanel(member);
+        changeCenterPanel(new MemberTabbedPanel(member));
+    }
+
+    private void changeCenterPanelToEvent(Event event) {
+        //TODO make MemberInfoPanel a singleton, to make it more efficient
+        changeCenterPanel(new EventsInfoPanel(event));
+
+    }
+
+    private void changeCenterPanelToMemberTable() {
+        changeCenterPanel(new MembersTablePanel());
+    }
+
+    private void changeCenterPanelToEventTable() {
+        changeCenterPanel(new EventsTablePanel());
+    }
+
+    private void changeCenterPanel(JPanel panel) {
+        remove(centerPanel);
+        centerPanel = panel;
         add(centerPanel, BorderLayout.CENTER);
         revalidate();
         repaint();

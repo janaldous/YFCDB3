@@ -30,7 +30,15 @@ public class Member extends Person {
     private Position position;
 
     public Member() {
+        setID(numberOfMembers++);
         position = Position.MEMBER;
+
+        education = new Education();
+        father = new Parent();
+        mother = new Parent();
+        emergencyContactList = new ArrayList<EmergencyContact>();
+        seminarRetreatList = new ArrayList<SeminarRetreat>();
+
         setUsername();
         setDateUpdated();
     }
