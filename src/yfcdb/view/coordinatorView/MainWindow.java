@@ -7,14 +7,13 @@ import yfcdb.member.MemberList;
 import yfcdb.member.Position;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 /**
  * Created by janaldoustorres on 23/05/15.
@@ -155,9 +154,58 @@ public class MainWindow extends JFrame {
             }
         });
         mFile.add(miMakeReport);
+        MenuItem miUpload = new MenuItem("Upload");
+        miUpload.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    MemberList.uploadFromFile();
+                    EventList.uploadFromFile();
+
+                    JOptionPane.showMessageDialog(null, "Upload successful");
+                } catch (IOException e1) {
+                    JOptionPane.showMessageDialog(null, "ERROR");
+                }
+            }
+        });
+        mFile.add(miUpload);
+        MenuItem miSave = new MenuItem("Save");
+        miSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    MemberList.saveToFile();
+                    EventList.saveToFile();
+
+                    JOptionPane.showMessageDialog(null, "File saved");
+
+                } catch (IOException e1) {
+                    JOptionPane.showMessageDialog(null, "ERROR");
+                }
+
+            }
+        });
+        mFile.add(miSave);
 
         Menu mEdit = new Menu("Edit");
         Menu mView = new Menu("View");
+        MenuItem miViewMembers = new MenuItem("View member table");
+        miViewMembers.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCenterPanelToMemberTable();
+            }
+        });
+        mView.add(miViewMembers);
+        MenuItem miViewEvents = new MenuItem("View events table");
+        miViewEvents.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCenterPanelToEventTable();
+            }
+        });
+        mView.add(miViewEvents);
 
         Menu mEvents = new Menu("Events");
         MenuItem miAddEvent = new MenuItem("Add event");
@@ -168,14 +216,7 @@ public class MainWindow extends JFrame {
             }
         });
         mEvents.add(miAddEvent);
-        MenuItem miViewEvents = new MenuItem("View events table");
-        miViewEvents.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                changeCenterPanelToEventTable();
-            }
-        });
-        mEvents.add(miViewEvents);
+
 
         Menu mMember = new Menu("Member");
         MenuItem miAddMember = new MenuItem("Add member");
@@ -186,14 +227,7 @@ public class MainWindow extends JFrame {
             }
         });
         mMember.add(miAddMember);
-        MenuItem miViewMembers = new MenuItem("View member table");
-        miViewMembers.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                changeCenterPanelToMemberTable();
-            }
-        });
-        mMember.add(miViewMembers);
+
 
         menuBar.add(mFile);
         menuBar.add(mEdit);

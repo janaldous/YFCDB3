@@ -5,9 +5,7 @@ import yfcdb.member.Person;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by janaldoustorres on 19/05/15.
@@ -18,7 +16,8 @@ public class Event {
     private EventType type;
     private int regFee, noOfAttendees;
     private Date startDate, endDate;
-    private ArrayList<Attendee> attendees = new ArrayList<Attendee>();
+    //private ArrayList<Attendee> attendeesList = new ArrayList<Attendee>();
+    private HashMap<Person, Role> attendeesMap = new HashMap<Person, Role>();
 
     public Event(String name, EventType type, String venue, String notes, int regFee, Date startDate, Date endDate)
     {
@@ -117,7 +116,7 @@ public class Event {
      * @return the noOfAttendees
      */
     public int getNoOfAttendees() {
-        return attendees.size();
+        return attendeesMap.size();
     }
 
     /**
@@ -163,9 +162,8 @@ public class Event {
 
     public void addAttendee(Person p, Role r)
     {
-        Attendee a = new Attendee(p, r);
-        attendees.add(a);
-        noOfAttendees = attendees.size();
+        attendeesMap.put(p, r);
+        noOfAttendees = attendeesMap.size();
     }
 
     public String toString()
@@ -195,5 +193,9 @@ public class Event {
 
     public Object[] toArray() {
         return new Object[] {startDate, name, type, venue, noOfAttendees};
+    }
+
+    public HashMap<Person, Role> getAttendees() {
+        return attendeesMap;
     }
 }

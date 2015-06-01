@@ -11,6 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by janaldoustorres on 01/06/15.
  */
+@Deprecated
 public class EventInfoPanelListener implements ActionListener {
     private EventFormPanel eventFormPanel;
     private MembersAttendanceTablePanel membersAttendanceTablePanel;
@@ -34,7 +35,7 @@ public class EventInfoPanelListener implements ActionListener {
         }
         if (success) {
             JOptionPane.showMessageDialog(null, "Success");
-            ((EventPanel) eventFormPanel).updateEvent();
+            //((EventPanel) eventFormPanel).updateEvent();
             EventList eventList = EventList.getInstance();
             Event event = ((EventPanel) eventFormPanel).getEvent();
             if (!eventList.contains(event)) {

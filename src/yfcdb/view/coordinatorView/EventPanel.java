@@ -120,15 +120,13 @@ public class EventPanel extends EventFormPanel {
         return event;
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
+    public void updateEvent(Event event) {
+        getInfo(event);
     }
 
     public Event getEvent() {
         return event;
     }
 
-    public void updateEvent() {
-        getInfo(event);
-    }
+    public void setEvent(Event event) { this.event = event; }
 }

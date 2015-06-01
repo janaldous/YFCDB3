@@ -1,8 +1,10 @@
 package yfcdb.view.coordinatorView;
 
-import yfcdb.events.Role;
+import yfcdb.events.*;
+import yfcdb.events.Event;
 import yfcdb.member.Member;
 import yfcdb.member.MemberList;
+import yfcdb.member.Person;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -10,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by janaldoustorres on 01/06/15.
@@ -36,8 +39,8 @@ public class MembersAttendanceTablePanel extends JPanel {
 
     private void populateTable() {
         ArrayList<Member> memberList = MemberList.getMemberArrayList();
-        for (Member member : memberList) {
-            defaultTableModel.addRow(member.toAttendanceArray());
+        for (int row = 0; row < memberList.size(); row++) {
+            defaultTableModel.addRow(new Object[] {memberList.get(row), null});
         }
     }
 
@@ -54,11 +57,38 @@ public class MembersAttendanceTablePanel extends JPanel {
         roleColumn.setCellRenderer(renderer);
     }
 
-    public void setInfo() {
+    public void getInfo(yfcdb.events.Event event) {
+        HashMap<Person, Role> attendeeMap = event.getAttendees();
 
+        for (int row = 0; row < defaultTableModel.getRowCount(); row++) {
+            Member member = (Member)defaultTableModel.getValueAt(row, 0);
+            Role role = (Role) defaultTableModel.getValueAt(row, 1);
+            if (role != null) {
+                attendeeMap.putIfAbsent(member, role);
+            }
+        }
+
+        System.out.println(event.getAttendees());
     }
 
-    public void getInfo() {
+    public yfcdb.events.Event setInfo(yfcdb.events.Event event) {
+        HashMap<Person, Role> attendeeMap = event.getAttendees();
 
+        for (int row = 0; row < defaultTableModel.getRowCount(); row++) {
+            Member member = (Member)defaultTableModel.getValueAt(row, 0);
+            if (attendeeMap.containsKey(member)) {
+                //put role
+                Role role = attendeeMap.get(member);
+                //sets role at this Table
+                defaultTableModel.setValueAt(role, row, 1);
+            } else {
+                continue;
+            }
+        }
+        return event;
+    }
+
+    public void updateEvent(Event event) {
+        getInfo(event);
     }
 }

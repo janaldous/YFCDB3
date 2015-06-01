@@ -1,38 +1,16 @@
-package yfcdb.member;
+package yfcdb;
 
 import com.cedarsoftware.util.io.JsonReader;
 import com.cedarsoftware.util.io.JsonWriter;
+import yfcdb.member.*;
 
-import javax.swing.*;
 import java.io.*;
-import java.util.ArrayList;
 
 /**
- * Created by janaldoustorres on 29/05/15.
+ * Created by janaldoustorres on 01/06/15.
  */
-public class MemberList {
-    private static ArrayList<Member> memberArrayList;
-    private static MemberList memberList = new MemberList();
-
-    public MemberList() {
-        memberArrayList = new ArrayList<Member>();
-        //uploadFromFile();
-    }
-
-    public static ArrayList<Member> getMemberArrayList() {
-        return memberArrayList;
-    }
-
-    public static MemberList getInstance() {
-        return memberList;
-    }
-
-    public static void addMember(Member member) {
-        memberArrayList.add(member);
-    }
-
-    @Deprecated
-    public void populateList() {
+public class JSONTrial {
+    public static void main(String[] args) throws IOException {
         YFCGroup chapterC = new YFCGroup("C", "C");
         Address address = new Address("109 Mahogany", "Sta Rosa", "SRVI", "4026");
         Member jat = new Member(Position.MEMBER, "Jan Aldous", "Turla", "Torres", "Jat", chapterC, address);
@@ -70,42 +48,38 @@ public class MemberList {
         chelsie.addEmergencyContact(jat.getMother().toEmergencyContact());
         chelsie.setSpecialSkills("viola, swimming, programming");
 
-        memberArrayList.add(jat);
-        memberArrayList.add(chelsie);
-    }
 
-    public boolean contains(Member member) {
-        if (memberArrayList.contains(member)) return true;
-        return false;
-    }
+//        String jatJson = JsonWriter.objectToJson(jat);
+//        String chelsieJson = JsonWriter.objectToJson(chelsie);
+//        System.out.println(jatJson);
+//        System.out.println(chelsieJson);
+//
+//        Member member = (Member)JsonReader.jsonToJava(jatJson);
+//        Member member1 = (Member)JsonReader.jsonToJava(chelsieJson);
+//        System.out.println(member);
+//        System.out.println(member1);
 
-    public void print() {
-        for (Member member: memberArrayList) {
-            System.out.println(member);
-        }
 
-        System.out.println(memberArrayList.size());
-    }
+        FileWriter file = new FileWriter("members.json");
+        file.write(JsonWriter.objectToJson(jat));
+        file.write("\n");
+        file.write(JsonWriter.objectToJson(chelsie));
+        file.flush();
+        file.close();
 
-    public static void saveToFile() throws IOException {
-        FileWriter file = null;
-            file = new FileWriter("members.json");
-
-            file.write(JsonWriter.objectToJson(memberArrayList));
-
-            file.flush();
-            file.close();
-
-    }
-
-    public static void uploadFromFile() throws IOException {
+        try {
             BufferedReader br = new BufferedReader(new FileReader(new File("members.json")));
             String line;
             int c = 0;
             while ((line = br.readLine()) != null) {
-                memberArrayList = (ArrayList<Member>)JsonReader.jsonToJava(line);
+
+                Member member1 = (Member)JsonReader.jsonToJava(line);
+                System.out.println(member1);
                 c++;
             }
             System.out.println(c);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
