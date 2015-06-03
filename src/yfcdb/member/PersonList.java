@@ -30,18 +30,21 @@ public class PersonList {
         return personList;
     }
 
-    public void setInstance(PersonList personList) {
-        this.personList = personList;
-        this.personArrayList = personList.getPersonArrayList();
+    public void setPersonArrayList(ArrayList<Person> personArrayList) {
+        this.personArrayList = personArrayList;
     }
 
-    public static void addPerson(Person person) {
+    public void addPerson(Person person) {
         personArrayList.add(person);
     }
 
     public boolean contains(Person person) {
         if (personArrayList.contains(person)) return true;
         return false;
+    }
+
+    public boolean removePerson(Person person) {
+        return personArrayList.remove(person);
     }
 
     public void print() {

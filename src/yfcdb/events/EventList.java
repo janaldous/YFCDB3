@@ -26,9 +26,8 @@ public class EventList {
         return eventList;
     }
 
-    public void setInstance(EventList eventList) {
-        this.eventList = eventList;
-        this.eventArrayList = eventList.getEventArrayList();
+    public void setEventArrayList(ArrayList<Event> eventArrayList) {
+        this.eventArrayList = eventArrayList;
     }
 
     public void addEvent(Event event) {

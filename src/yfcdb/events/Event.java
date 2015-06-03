@@ -18,7 +18,7 @@ public class Event {
     private Date startDate, endDate;
     //private ArrayList<Attendee> attendeesList = new ArrayList<Attendee>();
     private HashMap<Person, Role> attendeesMap = new HashMap<Person, Role>();
-    protected final static SimpleDateFormat dt = new SimpleDateFormat("m/dd/yyyy");
+    protected final static SimpleDateFormat dt = new SimpleDateFormat("MM/dd/yyyy");
 
     public Event(String name, EventType type, String venue, String notes, int regFee, Date startDate, Date endDate)
     {

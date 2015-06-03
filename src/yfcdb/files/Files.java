@@ -24,9 +24,9 @@ public class Files {
         JsonReader jr = new JsonReader(new FileInputStream(filename));
         YFCFiles yfcFiles = (YFCFiles)jr.readObject();
         PersonList personList = PersonList.getInstance();
-        personList.setInstance(yfcFiles.getPersonList());
+        personList.setPersonArrayList(yfcFiles.getPersonArrayList());
         EventList eventList = EventList.getInstance();
-        eventList.setInstance(yfcFiles.getEventList());
+        eventList.setEventArrayList(yfcFiles.getEventArrayList());
 
     }
 }

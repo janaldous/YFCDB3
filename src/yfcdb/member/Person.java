@@ -21,7 +21,7 @@ public class Person {
     protected String cellphoneNumber;
     protected String email;
     protected Date birthday;
-    protected final static SimpleDateFormat dt = new SimpleDateFormat("mm/dd/yyyy");
+    protected final static SimpleDateFormat dt = new SimpleDateFormat("MM/dd/yyyy");
 
     public Person() {
         setID(numberOfMembers++);
@@ -230,7 +230,7 @@ public class Person {
     }
 
     public Object[] toArray() {
-        return new Object[] {this, lastname, firstname, dt.format(birthday), cellphoneNumber};
+        return new Object[] {this, position, lastname, firstname, dt.format(birthday), cellphoneNumber};
     }
 
     @Override

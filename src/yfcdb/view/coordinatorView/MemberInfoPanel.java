@@ -637,12 +637,20 @@ public class MemberInfoPanel extends JPanel {
     private class BottomPanel extends JPanel {
         private BottomPanel() {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
-            JButton jbCancel = new JButton("Cancel");
+            JButton jbDelete = new JButton("Delete");
+            jbDelete.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    PersonList personList = PersonList.getInstance();
+                    personList.removePerson(member);
+                    mainWindow.changeCenterPanelToEmpty();
+                }
+            });
             JButton jbSave = new JButton("Save");
             memberInfoPanelListener.addPanels(panels);
             jbSave.addActionListener(memberInfoPanelListener);
 
-            add(jbCancel);
+            add(jbDelete);
             add(jbSave);
         }
     }
