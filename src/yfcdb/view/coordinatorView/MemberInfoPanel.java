@@ -20,13 +20,13 @@ public class MemberInfoPanel extends JPanel {
     private Member member;
     private MemberInfoPanelListener memberInfoPanelListener;
     private BriefingPanel briefingPanel;
-    //private FormPanel briefingPanel, namePanel, personalPanel, contactPanel, schoolPanel, parentPanel,
-    //        emergencyContactPanel, otherPanel;
+    private MainWindow mainWindow;
 
     public class BriefingPanel extends FormPanel {
         private static final int ageRange = 9;
         private JTextField jtfId, jtfDateLastUpdated, jtfAge, jtfYfcAge;
-        private JComboBox jcbPosition, jcbEntryYear;
+        private JComboBox<Position> jcbPosition;
+        private JComboBox<String> jcbEntryYear;
 
         private BriefingPanel() {
             setLayout(new GridLayout(3, 4));
@@ -37,7 +37,7 @@ public class MemberInfoPanel extends JPanel {
             jtfId.setEditable(false);
 
             JLabel jlDateLastUpdated = new JLabel("Date Last Updated:");
-            jtfDateLastUpdated = new JTextField("jo");
+            jtfDateLastUpdated = new JTextField();
             jtfDateLastUpdated.setEditable(false);
 
             JLabel jlAge = new JLabel("Age:");
@@ -49,7 +49,7 @@ public class MemberInfoPanel extends JPanel {
             jtfYfcAge.setEditable(false);
 
             JLabel jlPosition = new JLabel("YFC Position:");
-            jcbPosition = new JComboBox<String>(Position.getPositions());
+            jcbPosition = new JComboBox<Position>(Position.values());
 
 
             String[] yfcAgeList = new String[ageRange];
@@ -90,9 +90,8 @@ public class MemberInfoPanel extends JPanel {
 
         @Override
         public Member getInfo(Member member) {
-            Position position = Position.convertToPosition(jcbPosition.getSelectedItem().toString());
-            int entryYear = Integer.parseInt(jcbEntryYear.getSelectedItem().toString());
-            System.out.println(position);
+            Position position = (Position) jcbPosition.getSelectedItem();
+            int entryYear = Integer.parseInt((String)jcbEntryYear.getSelectedItem());
             member.setPosition(position);
             member.setDateUpdated();
             member.setYfcEntryYear(entryYear);
@@ -182,10 +181,10 @@ public class MemberInfoPanel extends JPanel {
             jcbKfcTransfer = new JComboBox<String>(yesNoList);
 
             JLabel jlBloodType = new JLabel("Blood Type:");
-            jcbBloodType = new JComboBox<String>(BloodType.getBloodTypes());
+            jcbBloodType = new JComboBox<BloodType>(BloodType.values());
 
             JLabel jlShirtSize = new JLabel("Shirt Size:");
-            jcbShirtSize = new JComboBox<String>(ShirtSize.getShirtSizes());
+            jcbShirtSize = new JComboBox<ShirtSize>(ShirtSize.values());
 
             //first row
             JPanel jpFirstRow = new JPanel();
@@ -227,9 +226,8 @@ public class MemberInfoPanel extends JPanel {
             String gender = jcbGender.getSelectedItem().toString();
             String transferee = jcbKfcTransfer.getSelectedItem().toString();
             boolean kfcTransfer = (transferee.equals("Y")) ? true : false;
-            System.out.println(jcbBloodType.getSelectedItem());
-            BloodType bloodType = BloodType.convertToBloodType(jcbBloodType.getSelectedItem().toString());
-            ShirtSize shirtSize = ShirtSize.convertToShirtSize(jcbShirtSize.getSelectedItem().toString());
+            BloodType bloodType = (BloodType) jcbBloodType.getSelectedItem();
+            ShirtSize shirtSize = (ShirtSize) jcbShirtSize.getSelectedItem();
             member.setBirthday(birthday);
             member.setGender(gender);
             member.setKfcToYfc(kfcTransfer);
@@ -649,7 +647,8 @@ public class MemberInfoPanel extends JPanel {
         }
     }
 
-    public MemberInfoPanel() {
+    public MemberInfoPanel(MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
         setLayout(new GridBagLayout());
         setBorder(new EmptyBorder(20, 20, 20, 20) );
 
@@ -707,8 +706,8 @@ public class MemberInfoPanel extends JPanel {
         add(bottomPanel, c);
     }
 
-    public MemberInfoPanel(Member member) {
-        this();
+    public MemberInfoPanel(MainWindow mainWindow, Member member) {
+        this(mainWindow);
         this.member = member;
         if (member.getFirstName() == null) {
             briefingPanel.setInfoForNewMember(member);
@@ -727,6 +726,7 @@ public class MemberInfoPanel extends JPanel {
         for (FormPanel panel: panels) {
             panel.getInfo(member);
         }
+        mainWindow.changeCenterPanelToMember(member);
     }
 
     public void setMember(Member member) {

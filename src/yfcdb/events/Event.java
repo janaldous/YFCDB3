@@ -14,10 +14,11 @@ public class Event {
     private static int id = 0;
     private String name, venue, notes;
     private EventType type;
-    private int regFee, noOfAttendees;
+    private int regFee;
     private Date startDate, endDate;
     //private ArrayList<Attendee> attendeesList = new ArrayList<Attendee>();
     private HashMap<Person, Role> attendeesMap = new HashMap<Person, Role>();
+    protected final static SimpleDateFormat dt = new SimpleDateFormat("m/dd/yyyy");
 
     public Event(String name, EventType type, String venue, String notes, int regFee, Date startDate, Date endDate)
     {
@@ -33,7 +34,7 @@ public class Event {
     }
 
     public Event() {
-        id++;
+        //id++;
     }
 
     /**
@@ -160,39 +161,19 @@ public class Event {
         return Integer.toString(id);
     }
 
-    public void addAttendee(Person p, Role r)
-    {
+    public void addAttendee(Person p, Role r) {
         attendeesMap.put(p, r);
-        noOfAttendees = attendeesMap.size();
     }
 
-    public String toString()
-    {
-//        String message = "";
-//
-//        message += "==================="
-//                + "\nEvent";
-//        message += "\nName: " + name
-//                + "\nType: " + type
-//                + "\nVenue: " + venue
-//                + "\nNotes: " + notes
-//                + "\nReg fee:" + regFee
-//                + "\nNo of attendees: " + noOfAttendees
-//                + "\nStart Date: " + getStartDate()
-//                + "\nEnd date: " + getEndDate();
-//
-//        for(Attendee attendee: attendees)
-//        {
-//            message += "\n" + attendee;
-//        }
-//        message += "\n===================";
-//        return message;
-
+    public String toString() {
+        if (name.isEmpty()) {
+            return type + " (" + dt.format(startDate) + ")";
+        }
         return name + " (" + type + ")";
     }
 
     public Object[] toArray() {
-        return new Object[] {startDate, name, type, venue, noOfAttendees};
+        return new Object[] {dt.format(startDate), name, type, venue, notes, getNoOfAttendees()};
     }
 
     public HashMap<Person, Role> getAttendees() {

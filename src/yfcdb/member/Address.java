@@ -6,6 +6,8 @@ package yfcdb.member;
 public class Address {
     private String street, city, village, postalCode;
 
+    public Address() {}
+
     public Address(String street, String city, String village, String postalCode) {
         this.street = street;
         this.city = city;

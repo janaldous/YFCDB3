@@ -15,52 +15,31 @@ import java.util.List;
 
 public class Member extends Person {
     private Address address;
-    private int age;
     private boolean kfcToYfc;
     private BloodType bloodType;
     private Education education;
     private Parent mother, father;
     private ArrayList<EmergencyContact> emergencyContactList;
     private int yfcEntryYear;
-    private String gender;
     private ShirtSize shirtSize;
-    private Date birthday;
     private String specialSkills, illness;
     private ArrayList<SeminarRetreat> seminarRetreatList;
-    private Position position;
 
     public Member() {
-        setID(numberOfMembers++);
+        super();
         position = Position.MEMBER;
 
+        address = new Address();
         education = new Education();
         father = new Parent();
         mother = new Parent();
         emergencyContactList = new ArrayList<EmergencyContact>();
         seminarRetreatList = new ArrayList<SeminarRetreat>();
-
-        setUsername();
-        setDateUpdated();
     }
 
     public Member(Position pos, String fn, String mn, String ln, String nn, YFCGroup group, Address address) {
-        setID(numberOfMembers++);
-        position = pos;
-        firstname = fn;
-        middlename = mn;
-        lastname = ln;
-        nickname = nn;
-        this.group = group;
+        super(pos, fn, mn, ln, nn, group);
         this.address = address;
-
-        education = new Education();
-        father = new Parent();
-        mother = new Parent();
-        emergencyContactList = new ArrayList<EmergencyContact>();
-        seminarRetreatList = new ArrayList<SeminarRetreat>();
-
-        setUsername();
-        setDateUpdated();
     }
 
     public Parent getMother() {
@@ -79,14 +58,6 @@ public class Member extends Person {
         this.father = father;
     }
 
-    public YFCGroup getGroup() {
-        return group;
-    }
-
-    public void setGroup(YFCGroup group) {
-        this.group = group;
-    }
-
     public void addEmergencyContact(EmergencyContact ec) {
         emergencyContactList.add(ec);
     }
@@ -99,23 +70,6 @@ public class Member extends Person {
 
     public void setAddress(Address address) {
         this.address = address;
-    }
-
-    public int getAge() {
-        Calendar calBirthday = Calendar.getInstance();
-        Calendar calToday = Calendar.getInstance();
-        calBirthday.setTime(birthday);
-
-        int age = calToday.get(Calendar.YEAR) - calBirthday.get(Calendar.YEAR);
-
-        if (calToday.get(Calendar.MONTH) < calBirthday.get(Calendar.MONTH)) {
-            age--;
-        } else if ((calToday.get(Calendar.MONTH) == calBirthday.get(Calendar.MONTH))
-                && (calToday.get(Calendar.DAY_OF_MONTH) < calBirthday.get(Calendar.DAY_OF_MONTH))) {
-            age--;
-        }
-        this.age = age;
-        return age;
     }
 
     public String isKfcTransfer() {
@@ -158,34 +112,12 @@ public class Member extends Person {
         this.yfcEntryYear = yfcEntryYear;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     public ShirtSize getShirtSize() {
         return shirtSize;
     }
 
     public void setShirtSize(ShirtSize shirtSize) {
         this.shirtSize = shirtSize;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(int month, int day, int year) {
-        Calendar c = Calendar.getInstance();
-        c.set(year, month-1, day);
-        this.birthday = c.getTime();
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
     }
 
     public String getSpecialSkills() {
@@ -214,18 +146,5 @@ public class Member extends Person {
 
     public ArrayList<SeminarRetreat> getSeminarRetreatList() {
         return seminarRetreatList;
-    }
-
-    @Override
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
-    public String[] toAttendanceArray() {
-        return new String[] {this.toString(), ""};
     }
 }

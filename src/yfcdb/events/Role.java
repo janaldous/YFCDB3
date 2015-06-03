@@ -11,17 +11,17 @@ public enum Role {
     public String toString() {
         switch (this) {
             case PRESENT: return "P";
-            case SPEAKER: return "Spk";
-            case SHARER: return "Shr";
-            case HOUSEHOLD_LEADER: return "HHL";
-            case SERVICE_TEAM: return "ST";
-            case TEAM_LEADER: return "TL";
-            case ASS_TEAM_LEADER: return "ATL";
-            case HEAD_SERVANT: return "HS";
-            case ASS_HEAD_SERVANT: return "AHS";
-            case PRAYER_WARRIOR: return "PW";
-            case FOOD_COMMITTEE: return "FC";
-            case MUSIC_MINISTRY: return "MM";
+            case SPEAKER: return "Speaker";
+            case SHARER: return "Sharer";
+            case HOUSEHOLD_LEADER: return "Household Leader";
+            case SERVICE_TEAM: return "Service Team";
+            case TEAM_LEADER: return "Team Leader";
+            case ASS_TEAM_LEADER: return "Ass. Team Leader";
+            case HEAD_SERVANT: return "Head Servant";
+            case ASS_HEAD_SERVANT: return "Ass Head Servant";
+            case PRAYER_WARRIOR: return "Prayer Warrior";
+            case FOOD_COMMITTEE: return "Food Committee";
+            case MUSIC_MINISTRY: return "Music Ministry";
             default: return null;
         }
     }

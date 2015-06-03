@@ -17,24 +17,26 @@ public class Person {
     protected Position position;
     protected String firstname, middlename, lastname, nickname;
     protected YFCGroup group;
-    protected char gender;
-    private String cellphoneNumber, email;
+    protected String gender;
+    protected String cellphoneNumber;
+    protected String email;
     protected Date birthday;
+    protected final static SimpleDateFormat dt = new SimpleDateFormat("mm/dd/yyyy");
+
+    public Person() {
+        setID(numberOfMembers++);
+        setUsername();
+        setDateUpdated();
+    }
 
     public Person(Position pos, String fn, String mn, String ln, String nn, YFCGroup group) {
-        setID(numberOfMembers++);
+        this();
         position = pos;
         firstname = fn;
         middlename = mn;
         lastname = ln;
         nickname = nn;
         this.group = group;
-        setUsername();
-        setDateUpdated();
-    }
-
-    public Person() {
-        setID(numberOfMembers++);
     }
 
     /**
@@ -42,8 +44,7 @@ public class Person {
      */
     @Override
     public String toString() {
-
-        return nickname + " " + lastname + " (" + id + ")";
+        return nickname + " " + lastname + " (" + position + ")";
     }
 
     public void setFirstName(String firstname) {
@@ -93,8 +94,7 @@ public class Person {
     /**
      * sets username and timestamps update
      */
-    public void setUsername()
-    {
+    public void setUsername() {
         username = getID();
         setDateUpdated();
     }
@@ -149,6 +149,10 @@ public class Person {
         return position;
     }
 
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
     /**
      * timestamps method whenever there is a change to member fields
      */
@@ -185,5 +189,57 @@ public class Person {
 
     public String getFullName() {
         return firstname + " '" + nickname + "' " + middlename + " " + lastname;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(int month, int day, int year) {
+        Calendar c = Calendar.getInstance();
+        c.set(year, month-1, day);
+        this.birthday = c.getTime();
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public int getAge() {
+        Calendar calBirthday = Calendar.getInstance();
+        Calendar calToday = Calendar.getInstance();
+        calBirthday.setTime(birthday);
+
+        int age = calToday.get(Calendar.YEAR) - calBirthday.get(Calendar.YEAR);
+
+        if (calToday.get(Calendar.MONTH) < calBirthday.get(Calendar.MONTH)) {
+            age--;
+        } else if ((calToday.get(Calendar.MONTH) == calBirthday.get(Calendar.MONTH))
+                && (calToday.get(Calendar.DAY_OF_MONTH) < calBirthday.get(Calendar.DAY_OF_MONTH))) {
+            age--;
+        }
+        return age;
+    }
+
+    public Object[] toArray() {
+        return new Object[] {this, lastname, firstname, dt.format(birthday), cellphoneNumber};
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        } else if (obj instanceof Person && ((Person)obj).id == this.id) {
+            return true;
+        }
+        return false;
     }
 }

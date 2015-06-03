@@ -9,7 +9,7 @@ public enum Position {
     public String toString() {
         switch (this) {
             case MEMBER: return "Member";
-            case CHAPTER_HEAD: return "Chapter head";
+            case CHAPTER_HEAD: return "Chapter leader";
             case COORDINATOR: return "Coordinator";
             case HOUSEHOLD_HEAD: return "Household head";
             default: return null;

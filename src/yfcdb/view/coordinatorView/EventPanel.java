@@ -6,6 +6,7 @@ import yfcdb.member.Member;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -16,61 +17,35 @@ public class EventPanel extends EventFormPanel {
     private Event event;
     private final JTextField jtfEventName;
     private final JComboBox<EventType> jcbEventType;
-    private final DatePan startDatePanel, endDatePanel;
+    private final DatePanelWithTime startDatePanel, endDatePanel;
     private final JTextField jtfVenue;
     private final JTextField jtfRegFee;
     private final JTextField jtfNotes;
-
-    private class DatePan extends JPanel {
-        private DatePan() {
-            Calendar calendar = Calendar.getInstance();
-            Date initDate = calendar.getTime();
-            calendar.add(Calendar.YEAR, -100);
-            Date earliestDate = calendar.getTime();
-            calendar.add(Calendar.YEAR, 200);
-            Date latestDate = calendar.getTime();
-            SpinnerDateModel model = new SpinnerDateModel(initDate,
-                    earliestDate,
-                    latestDate,
-                    Calendar.YEAR);
-            JSpinner spinner = new JSpinner(model);
-            spinner.setEditor(new JSpinner.DateEditor(spinner, "MMM dd yyyy HH: mm"));
-
-            add(spinner);
-        }
-
-        private void setDate(Date date) {
-
-        }
-
-        private Date getDate() {
-            return null;
-        }
-    }
+    final static SimpleDateFormat dt = new SimpleDateFormat("yyyy");
 
     public EventPanel() {
         setLayout(new GridLayout(7,2));
 
         JLabel jlEventName = new JLabel("Name of Event *:");
-        jtfEventName = new JTextField();
+        jtfEventName = new JTextField("");
 
         JLabel jlEventType = new JLabel("Type of Event *:");
         jcbEventType = new JComboBox<EventType>(EventType.values());
 
         JLabel jlStartDate = new JLabel("Start Date *:");
-        startDatePanel = new DatePan();
+        startDatePanel = new DatePanelWithTime();
 
         JLabel jlEndDate = new JLabel("End Date *:");
-        endDatePanel = new DatePan();
+        endDatePanel = new DatePanelWithTime();
 
         JLabel jlVenue = new JLabel("Venue *:");
-        jtfVenue = new JTextField();
+        jtfVenue = new JTextField("");
 
         JLabel jlRegFee = new JLabel("Reg Fee:");
-        jtfRegFee = new JTextField();
+        jtfRegFee = new JTextField("");
 
         JLabel jlNotes = new JLabel("Notes:");
-        jtfNotes = new JTextField();
+        jtfNotes = new JTextField("");
 
         add(jlEventName);
         add(jtfEventName);
@@ -118,6 +93,15 @@ public class EventPanel extends EventFormPanel {
         event.setNotes(notes);
 
         return event;
+    }
+
+    @Override
+    public boolean isFilledOut() {
+        if (jcbEventType.getSelectedItem().equals("") || jtfVenue.getText().equals("")
+                || jtfRegFee.getText().equals("")) {
+            return false;
+        }
+        return true;
     }
 
     public void updateEvent(Event event) {

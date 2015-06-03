@@ -3,13 +3,13 @@ package yfcdb.member;
 import com.cedarsoftware.util.io.JsonReader;
 import com.cedarsoftware.util.io.JsonWriter;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 
 /**
  * Created by janaldoustorres on 29/05/15.
  */
+@Deprecated
 public class MemberList {
     private static ArrayList<Member> memberArrayList;
     private static MemberList memberList = new MemberList();

@@ -26,13 +26,9 @@ public class EventList {
         return eventList;
     }
 
-    @Deprecated
-    public void populateList() {
-        Date startDate = new Date();
-        Date endDate = new Date();
-        Event e1 = new Event("YFC Camp", EventType.YOUTH_CAMP, "Learning links", "", 100, startDate, endDate);
-
-        eventArrayList.add(e1);
+    public void setInstance(EventList eventList) {
+        this.eventList = eventList;
+        this.eventArrayList = eventList.getEventArrayList();
     }
 
     public void addEvent(Event event) {
@@ -55,27 +51,5 @@ public class EventList {
 
     public ArrayList<Event> getEventArrayList() {
         return eventArrayList;
-    }
-
-    public static void saveToFile() throws IOException {
-        FileWriter file = null;
-            file = new FileWriter("events.json");
-
-            file.write(JsonWriter.objectToJson(eventArrayList));
-
-            file.flush();
-            file.close();
-
-    }
-
-    public static void uploadFromFile() throws IOException {
-            BufferedReader br = new BufferedReader(new FileReader(new File("events.json")));
-            String line;
-            int c = 0;
-            while ((line = br.readLine()) != null) {
-                eventArrayList = (ArrayList<Event>) JsonReader.jsonToJava(line);
-                c++;
-            }
-            System.out.println(c);
     }
 }

@@ -16,6 +16,7 @@ public class EventsInfoPanel extends JPanel {
     private final EventPanel eventPanel;
     private final MembersAttendanceTablePanel membersAttendanceTablePanel;
     private Event event;
+    private MainWindow mainWindow;
 
     private class EventInfoPanelListener implements ActionListener {
 
@@ -43,7 +44,8 @@ public class EventsInfoPanel extends JPanel {
         }
     }
 
-    public EventsInfoPanel() {
+    public EventsInfoPanel(MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(20, 20, 20, 20) );
 
@@ -65,14 +67,14 @@ public class EventsInfoPanel extends JPanel {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    public EventsInfoPanel(String title) {
-        this();
+    public EventsInfoPanel(MainWindow mainWindow, String title) {
+        this(mainWindow);
         String html = "<html><h1>" + title + "</h1></html>";
         add(new JLabel(html), BorderLayout.NORTH);
     }
 
-    public EventsInfoPanel(Event event) {
-        this();
+    public EventsInfoPanel(MainWindow mainWindow, Event event) {
+        this(mainWindow);
         this.event = event;
         eventPanel.setInfo(event);
         membersAttendanceTablePanel.setInfo(event);
@@ -81,6 +83,7 @@ public class EventsInfoPanel extends JPanel {
     public void updateEvent() {
         eventPanel.updateEvent(event);
         membersAttendanceTablePanel.updateEvent(event);
+        mainWindow.changeCenterPanelToEvent(event);
     }
 
     public Event getEvent() {

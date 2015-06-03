@@ -29,7 +29,7 @@ public class EventsTablePanel extends JPanel {
         setLayout(new BorderLayout());
         JLabel jlTitle = new JLabel("Events List");
 
-        String[] columnNames = {"Date", "Name", "Type", "Venue", "Attendees"};
+        String[] columnNames = {"Date", "Name", "Type", "Venue", "Topics", "Attendees"};
         defaultTableModel = new DefaultTableModel(columnNames, 0);
 
         populateTable();

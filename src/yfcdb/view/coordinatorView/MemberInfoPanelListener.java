@@ -2,6 +2,7 @@ package yfcdb.view.coordinatorView;
 
 import yfcdb.member.Member;
 import yfcdb.member.MemberList;
+import yfcdb.member.PersonList;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -39,14 +40,12 @@ public class MemberInfoPanelListener implements ActionListener {
         if (success) {
             JOptionPane.showMessageDialog(null, "Success");
             memberInfoPanel.updateMember();
-            MemberList memberList = MemberList.getInstance();
+            PersonList personList = PersonList.getInstance();
             Member member = memberInfoPanel.getMember();
-            if (!memberList.contains(member)) {
-                memberList.addMember(member);
-                memberList.print();
+            if (!personList.contains(member)) {
+                personList.addPerson(member);
+                personList.print();
             }
-
-
         } else {
             JOptionPane.showMessageDialog(null, "Not filled out");
         }

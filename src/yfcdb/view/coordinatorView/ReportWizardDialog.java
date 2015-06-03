@@ -37,7 +37,7 @@ public class ReportWizardDialog extends JDialog {
     }
 
     public ReportWizardDialog() {
-        setLayout(new GridLayout(6, 2));
+        setLayout(new GridLayout(7, 2));
         setTitle("Report Wizard");
 
         JLabel jlReportTitle = new JLabel("Report title");
@@ -45,6 +45,10 @@ public class ReportWizardDialog extends JDialog {
 
         JLabel jlReportHeader = new JLabel("Report header");
         JTextArea jtaReportHeader = new JTextArea();
+
+        JLabel jlReportFooter = new JLabel("Report header");
+        JTextArea jtaReportFooter = new JTextArea();
+        jtaReportFooter.setToolTipText("Enter for notes");
 
         JLabel jlDateFrom = new JLabel("Date from");
         DateSpinner fromDateSpinner = new DateSpinner();
@@ -65,6 +69,8 @@ public class ReportWizardDialog extends JDialog {
         add(jtfReportTitle);
         add(jlReportHeader);
         add(jtaReportHeader);
+        add(jlReportFooter);
+        add(jtaReportFooter);
         add(jlDateFrom);
         add(fromDateSpinner);
         add(jlDateTo);

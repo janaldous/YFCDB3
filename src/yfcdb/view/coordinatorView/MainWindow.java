@@ -2,17 +2,13 @@ package yfcdb.view.coordinatorView;
 
 import yfcdb.events.Event;
 import yfcdb.events.EventList;
-import yfcdb.member.Member;
-import yfcdb.member.MemberList;
-import yfcdb.member.Position;
+import yfcdb.files.Files;
+import yfcdb.member.*;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -20,35 +16,60 @@ import java.io.IOException;
  */
 public class MainWindow extends JFrame {
     private JPanel centerPanel;
+    final static JPanel emptyPanel = new JPanel();
+    private final SidePanel sidePanel = new SidePanel();
     private final static Dimension preferredSize = new Dimension(1000, 700);
 
     private class SidePanel extends JPanel {
         private JTextField jtfSearchBar;
-        private DefaultListModel memberListModel, eventListModel;
-        private JList jlistMembersList;
+        private DefaultListModel personListModel, eventListModel;
+        private JList jList;
         private SidePanel() {
             setLayout(new BorderLayout());
 
             jtfSearchBar = new JTextField(15);
+            jtfSearchBar.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {}
 
-            memberListModel = new DefaultListModel();
+                @Override
+                public void keyPressed(KeyEvent e) {}
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    String filterStr = jtfSearchBar.getText().toLowerCase();
+
+                    if (!filterStr.isEmpty()) {
+                        if (jList.getModel() == personListModel) {
+                            populatePersonList(filterStr);
+                        } else if (jList.getModel() == eventListModel) {
+                            populateEventList(filterStr);
+                        }
+                    } else {
+                        populateLists();
+                    }
+                }
+            });
+
+            personListModel = new DefaultListModel();
             eventListModel = new DefaultListModel();
 
-            populateMemberList();
-            populateEventList();
+            populateLists();
 
-            jlistMembersList = new JList(memberListModel);
-            jlistMembersList.addMouseListener(new MouseAdapter() {
+            jList = new JList(personListModel);
+            jList.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     int doubleClick = 2;
                     JList list = (JList)e.getSource();
-                    if (list.getModel() == memberListModel) {
+                    if (list.getModel() == personListModel) {
                         if (e.getClickCount() == doubleClick) {// Double-click detected
                             int index = list.locationToIndex(e.getPoint());
 
-                            Member memberToShow = (Member) memberListModel.getElementAt(index);
-                            changeCenterPanelToMember(memberToShow);
+                            if (personListModel.getElementAt(index) instanceof Member) {
+                                Member memberToShow = (Member) personListModel.getElementAt(index);
+                                changeCenterPanelToMember(memberToShow);
+                            }
                         }
                     } else if (list.getModel() == eventListModel) {
                         if (e.getClickCount() == doubleClick) {// Double-click detected
@@ -58,13 +79,12 @@ public class MainWindow extends JFrame {
                             changeCenterPanelToEvent(eventToShow);
                         }
                     }
-
                 }
             });
 
 
             add(jtfSearchBar, BorderLayout.NORTH);
-            add(jlistMembersList, BorderLayout.CENTER);
+            add(jList, BorderLayout.CENTER);
 
             JPanel jpBottom = new JPanel(new GridLayout(1,2));
             JButton jbMember = new JButton("Members");
@@ -72,8 +92,8 @@ public class MainWindow extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     //TODO add observer here when a member is added/deleted
-                    populateMemberList();
-                    jlistMembersList.setModel(memberListModel);
+                    populatePersonList();
+                    jList.setModel(personListModel);
                 }
             });
             jpBottom.add(jbMember);
@@ -82,7 +102,7 @@ public class MainWindow extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     populateEventList();
-                    jlistMembersList.setModel(eventListModel);
+                    jList.setModel(eventListModel);
                 }
             });
             jpBottom.add(jbEvent);
@@ -90,11 +110,22 @@ public class MainWindow extends JFrame {
             add(jpBottom, BorderLayout.SOUTH);
         }
 
-        private void populateMemberList() {
-            memberListModel.clear();
-            MemberList memberList = MemberList.getInstance();
-            for (Member member: memberList.getMemberArrayList()) {
-                memberListModel.addElement(member);
+        private void populatePersonList() {
+            personListModel.clear();
+            PersonList personList = PersonList.getInstance();
+            for (Person person: personList.getPersonArrayList()) {
+                personListModel.addElement(person);
+            }
+        }
+
+        private void populatePersonList(String filterStr) {
+            personListModel.clear();
+            PersonList personList = PersonList.getInstance();
+            for (Person person: personList.getPersonArrayList()) {
+                String personStr = person.toString().toLowerCase();
+                if (personStr.contains(filterStr)) {
+                    personListModel.addElement(person);
+                }
             }
         }
 
@@ -105,25 +136,21 @@ public class MainWindow extends JFrame {
                 eventListModel.addElement(event);
             }
         }
-    }
 
+        private void populateEventList(String filterStr) {
+            eventListModel.clear();
+            EventList eventList = EventList.getInstance();
+            for (Event event: eventList.getEventArrayList()) {
+                String eventStr = event.toString().toLowerCase();
+                if (eventStr.contains(filterStr)) {
+                    eventListModel.addElement(event);
+                }
+            }
+        }
 
-
-    private class LeadersTablePanel extends JPanel {
-        private LeadersTablePanel() {
-            setLayout(new BorderLayout());
-            JLabel jlTitle = new JLabel("Leaders List");
-
-            String[] columnNames = {"Position", "Last Name", "First Name", "Age"};
-            DefaultTableModel defaultTableModel = new DefaultTableModel(columnNames, 0);
-            defaultTableModel.addRow(new Object[] {Position.CHAPTER_HEAD, "Torres", "Jat", 3});
-            defaultTableModel.addRow(new Object[] {Position.HOUSEHOLD_HEAD, "Torres", "Cheslie", 16});
-            defaultTableModel.addRow(new Object[] {Position.HOUSEHOLD_HEAD, "Torres", "Elsie", 48798});
-
-            JTable jtMembers = new JTable(defaultTableModel);
-
-            add(jlTitle, BorderLayout.NORTH);
-            add(new JScrollPane(jtMembers), BorderLayout.CENTER);
+        private void populateLists() {
+            populateEventList();
+            populatePersonList();
         }
     }
 
@@ -131,11 +158,17 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMenuBar(setupMenuBar());
         setPreferredSize(preferredSize);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                saveFiles(); System.exit(EXIT_ON_CLOSE);
+            }
+        });
 
         centerPanel = new JPanel();
-        //centerPanel = new JP("New Event");
 
-        add(new SidePanel(), BorderLayout.WEST);
+        uploadFiles();
+
+        add(sidePanel, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
 
         pack();
@@ -158,14 +191,7 @@ public class MainWindow extends JFrame {
         miUpload.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    MemberList.uploadFromFile();
-                    EventList.uploadFromFile();
-
-                    JOptionPane.showMessageDialog(null, "Upload successful");
-                } catch (IOException e1) {
-                    JOptionPane.showMessageDialog(null, "ERROR");
-                }
+                uploadFiles();
             }
         });
         mFile.add(miUpload);
@@ -173,17 +199,7 @@ public class MainWindow extends JFrame {
         miSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                try {
-                    MemberList.saveToFile();
-                    EventList.saveToFile();
-
-                    JOptionPane.showMessageDialog(null, "File saved");
-
-                } catch (IOException e1) {
-                    JOptionPane.showMessageDialog(null, "ERROR");
-                }
-
+                saveFiles();
             }
         });
         mFile.add(miSave);
@@ -242,7 +258,7 @@ public class MainWindow extends JFrame {
         //TODO make MemberInfoPanel a singleton, to make it more efficient
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel("<html><h1>New Event</h1></html>"), BorderLayout.NORTH);
-        panel.add(new EventsInfoPanel(), BorderLayout.CENTER);
+        panel.add(new EventsInfoPanel(this), BorderLayout.CENTER);
         changeCenterPanel(panel);
     }
 
@@ -250,19 +266,18 @@ public class MainWindow extends JFrame {
         //TODO make MemberInfoPanel a singleton, to make it more efficient
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel("<html><h1>New Member</h1></html>"), BorderLayout.NORTH);
-        panel.add(new JScrollPane(new MemberInfoPanel(new Member())), BorderLayout.CENTER);
+        panel.add(new JScrollPane(new MemberInfoPanel(this, new Member())), BorderLayout.CENTER);
         changeCenterPanel(panel);
     }
 
-    private void changeCenterPanelToMember(Member member) {
+    public void changeCenterPanelToMember(Member member) {
         //TODO make MemberInfoPanel a singleton, to make it more efficient
-        changeCenterPanel(new MemberTabbedPanel(member));
+        changeCenterPanel(new MemberTabbedPanel(this, member));
     }
 
-    private void changeCenterPanelToEvent(Event event) {
+    public void changeCenterPanelToEvent(Event event) {
         //TODO make MemberInfoPanel a singleton, to make it more efficient
-        changeCenterPanel(new EventsInfoPanel(event));
-
+        changeCenterPanel(new EventsInfoPanel(this, event));
     }
 
     private void changeCenterPanelToMemberTable() {
@@ -273,6 +288,10 @@ public class MainWindow extends JFrame {
         changeCenterPanel(new EventsTablePanel());
     }
 
+    public void changeCenterPanelToEmpty() {
+        changeCenterPanel(emptyPanel);
+    }
+
     private void changeCenterPanel(JPanel panel) {
         remove(centerPanel);
         centerPanel = panel;
@@ -281,7 +300,22 @@ public class MainWindow extends JFrame {
         repaint();
     }
 
-    public static void main(String[] args) {
-        new MainWindow().setVisible(true);
+    private void saveFiles() {
+        try {
+            Files.saveToFile();
+            JOptionPane.showMessageDialog(null, "File saved");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void uploadFiles() {
+        try {
+            Files.uploadFromFile();
+            sidePanel.populateLists();
+            JOptionPane.showMessageDialog(null, "Upload successful");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -2,6 +2,8 @@ package yfcdb.view.coordinatorView;
 
 import yfcdb.member.Member;
 import yfcdb.member.MemberList;
+import yfcdb.member.Person;
+import yfcdb.member.PersonList;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,7 +20,7 @@ public class MembersTablePanel extends JPanel {
         setLayout(new BorderLayout());
         JLabel jlTitle = new JLabel("Members List");
 
-        String[] columnNames = {"Last Name", "First Name", "Age"};
+        String[] columnNames = {"Position", "Last Name", "First Name", "Birthday", "Contact No"};
         defaultTableModel = new DefaultTableModel(columnNames, 0);
 
 
@@ -30,9 +32,10 @@ public class MembersTablePanel extends JPanel {
     }
 
     private void populateTable() {
-        ArrayList<Member> memberList = MemberList.getMemberArrayList();
-        for (Member member: memberList) {
-            defaultTableModel.addRow(member.toAttendanceArray());
+        PersonList personList = PersonList.getInstance();
+        ArrayList<Person> personArrayList = personList.getPersonArrayList();
+        for (Person person: personArrayList) {
+            defaultTableModel.addRow(person.toArray());
         }
     }
 }
