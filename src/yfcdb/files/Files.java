@@ -5,6 +5,7 @@ import com.cedarsoftware.util.io.JsonWriter;
 import yfcdb.events.EventList;
 import yfcdb.member.PersonList;
 
+import javax.swing.*;
 import java.io.*;
 
 /**
@@ -27,6 +28,47 @@ public class Files {
         personList.setPersonArrayList(yfcFiles.getPersonArrayList());
         EventList eventList = EventList.getInstance();
         eventList.setEventArrayList(yfcFiles.getEventArrayList());
+    }
 
+    public static void uploadFromFile(File file) throws FileNotFoundException {
+        JsonReader jr = new JsonReader(new FileInputStream(file));
+        YFCFiles yfcFiles = (YFCFiles)jr.readObject();
+        PersonList personList = PersonList.getInstance();
+        personList.setPersonArrayList(yfcFiles.getPersonArrayList());
+        EventList eventList = EventList.getInstance();
+        eventList.setEventArrayList(yfcFiles.getEventArrayList());
+    }
+
+    public static void chooseUpload() throws FileNotFoundException {
+        javax.swing.JFileChooser fc = new javax.swing.JFileChooser();
+        int returnVal = fc.showOpenDialog(null);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            System.out.println(file);
+
+            uploadFromFile(file);
+
+            JOptionPane.showMessageDialog(null, "Uploaded");
+        }
+    }
+
+    public static void downloadJSON() throws IOException {
+        javax.swing.JFileChooser fc = new javax.swing.JFileChooser("Downloads");
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal = fc.showOpenDialog(null);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            System.out.println(file);
+            //This is where a real application would open the file.
+
+            FileWriter fw = new FileWriter(file+"/"+filename);
+            fw.write(JsonWriter.objectToJson(new YFCFiles()));
+            fw.flush();
+            fw.close();
+
+            JOptionPane.showMessageDialog(null, "Saved as yfc.json");
+        }
     }
 }

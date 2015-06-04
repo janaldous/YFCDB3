@@ -82,11 +82,9 @@ public class MembersAttendanceTablePanel extends JPanel {
 
         for (int row = 0; row < defaultTableModel.getRowCount(); row++) {
             Person person = (Person)defaultTableModel.getValueAt(row, 0);
-            System.out.println(person.getID());
             if (attendeeMap.containsKey(person)) {
                 //put role
                 Role role = attendeeMap.get(person);
-                System.out.println(role);
                 //sets role at this Table
                 defaultTableModel.setValueAt(role, row, 1);
             } else {

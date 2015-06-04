@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by janaldoustorres on 23/05/15.
@@ -179,11 +180,35 @@ public class MainWindow extends JFrame {
         Menu mFile = new Menu("File");
         MenuItem miAbout = new MenuItem("About");
         mFile.add(miAbout);
+        MenuItem miUploadJSON = new MenuItem("Upload JSON");
+        miUploadJSON.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Files.chooseUpload();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        mFile.add(miUploadJSON);
+        MenuItem miDownloadJSON = new MenuItem("Download JSON");
+        miDownloadJSON.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Files.downloadJSON();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        mFile.add(miDownloadJSON);
         MenuItem miMakeReport = new MenuItem("Make report");
         miMakeReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new ReportWizardDialog().setVisible(true);
+                showWizardDialog();
             }
         });
         mFile.add(miMakeReport);
@@ -288,6 +313,10 @@ public class MainWindow extends JFrame {
         changeCenterPanel(new EventsTablePanel());
     }
 
+    public void changeCenterPanelToReportTable(Date start, Date end) {
+        changeCenterPanel(new ReportPanel(start, end));
+    }
+
     public void changeCenterPanelToEmpty() {
         changeCenterPanel(emptyPanel);
     }
@@ -300,10 +329,14 @@ public class MainWindow extends JFrame {
         repaint();
     }
 
+    private void showWizardDialog() {
+        new ReportWizardDialog(this).setVisible(true);
+    }
+
     private void saveFiles() {
         try {
             Files.saveToFile();
-            JOptionPane.showMessageDialog(null, "File saved");
+            JOptionPane.showMessageDialog(this, "File saved");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -313,7 +346,7 @@ public class MainWindow extends JFrame {
         try {
             Files.uploadFromFile();
             sidePanel.populateLists();
-            JOptionPane.showMessageDialog(null, "Upload successful");
+            JOptionPane.showMessageDialog(this, "Upload successful");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

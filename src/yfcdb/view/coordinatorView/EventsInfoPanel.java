@@ -44,7 +44,7 @@ public class EventsInfoPanel extends JPanel {
         }
     }
 
-    public EventsInfoPanel(MainWindow mainWindow) {
+    public EventsInfoPanel(final MainWindow mainWindow) {
         this.mainWindow = mainWindow;
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(20, 20, 20, 20) );
@@ -59,8 +59,16 @@ public class EventsInfoPanel extends JPanel {
         JButton jbSave = new JButton("Save");
         EventInfoPanelListener eventInfoPanelListener = new EventInfoPanelListener();
         jbSave.addActionListener(eventInfoPanelListener);
-        JButton jbCancel = new JButton("Cancel");
-        buttonPanel.add(jbCancel);
+        JButton jbDelete = new JButton("Delete");
+        jbDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EventList eventList = EventList.getInstance();
+                eventList.removeEvent(event);
+                mainWindow.changeCenterPanelToEmpty();
+            }
+        });
+        buttonPanel.add(jbDelete);
         buttonPanel.add(jbSave);
 
         add(centerPanel, BorderLayout.CENTER);

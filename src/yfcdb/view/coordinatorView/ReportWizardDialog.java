@@ -2,14 +2,26 @@ package yfcdb.view.coordinatorView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Created by janaldoustorres on 01/06/15.
  */
-public class ReportWizardDialog extends JDialog {
+public class ReportWizardDialog extends JDialog implements ActionListener {
+
+    private final JTextField jtfReportTitle;
+    private final JTextArea jtaReportFooter;
+    private final DateSpinner fromDateSpinner;
+    private final DateSpinner toDateSpinner;
+    private final JComboBox jcbFileType;
+    private MainWindow mainWindow;
+
     private class DateSpinner extends JPanel {
+        private final JSpinner spinner;
+
         private DateSpinner() {
             Calendar calendar = Calendar.getInstance();
             Date initDate = calendar.getTime();
@@ -21,54 +33,52 @@ public class ReportWizardDialog extends JDialog {
                     earliestDate,
                     latestDate,
                     Calendar.YEAR);
-            JSpinner spinner = new JSpinner(model);
+            spinner = new JSpinner(model);
             spinner.setEditor(new JSpinner.DateEditor(spinner, "MMM yyyy"));
 
             add(spinner);
         }
 
         private void setDate(Date date) {
-
+            spinner.setValue(date);
         }
 
         private Date getDate() {
-            return null;
+            Date date = (Date)spinner.getValue();
+            return date;
         }
     }
 
-    public ReportWizardDialog() {
-        setLayout(new GridLayout(7, 2));
+    public ReportWizardDialog(MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
+        setLayout(new GridLayout(6, 2));
         setTitle("Report Wizard");
 
         JLabel jlReportTitle = new JLabel("Report title");
-        JTextField jtfReportTitle = new JTextField();
+        jtfReportTitle = new JTextField("");
 
-        JLabel jlReportHeader = new JLabel("Report header");
-        JTextArea jtaReportHeader = new JTextArea();
-
-        JLabel jlReportFooter = new JLabel("Report header");
-        JTextArea jtaReportFooter = new JTextArea();
+        JLabel jlReportFooter = new JLabel("Report notes");
+        jtaReportFooter = new JTextArea("");
         jtaReportFooter.setToolTipText("Enter for notes");
 
         JLabel jlDateFrom = new JLabel("Date from");
-        DateSpinner fromDateSpinner = new DateSpinner();
+        fromDateSpinner = new DateSpinner();
 
         JLabel jlDateTo = new JLabel("Date to");
-        DateSpinner toDateSpinner = new DateSpinner();
+        toDateSpinner = new DateSpinner();
 
         JLabel jlFileType = new JLabel("File type");
-        JComboBox jcbFileType = new JComboBox(new String[] {"pdf", "xslx", "csv"});
+        jcbFileType = new JComboBox(new String[] {"xslx", "csv", "pdf"});
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton jbCancel = new JButton("Cancel");
         JButton jbSave = new JButton("Create");
+        jbSave.addActionListener(this);
         bottomPanel.add(jbCancel);
         bottomPanel.add(jbSave);
 
         add(jlReportTitle);
         add(jtfReportTitle);
-        add(jlReportHeader);
-        add(jtaReportHeader);
         add(jlReportFooter);
         add(jtaReportFooter);
         add(jlDateFrom);
@@ -80,5 +90,28 @@ public class ReportWizardDialog extends JDialog {
         add(bottomPanel);
 
         pack();
+    }
+
+    private boolean isFilledOut() {
+        if (jtfReportTitle.getText().isEmpty() || jtaReportFooter.getText().isEmpty()) {
+            return false;
+        } else if (fromDateSpinner.getDate().after(toDateSpinner.getDate())) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (isFilledOut()) {
+            String title = jtfReportTitle.getText().toUpperCase();
+            String footer = jtaReportFooter.getText();
+            Date start = fromDateSpinner.getDate();
+            Date end = toDateSpinner.getDate();
+
+            mainWindow.changeCenterPanelToReportTable(start, end);
+        } else {
+            JOptionPane.showMessageDialog(null, "not filled out or dates are wrong");
+        }
     }
 }

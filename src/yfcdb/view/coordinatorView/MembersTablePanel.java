@@ -1,20 +1,14 @@
 package yfcdb.view.coordinatorView;
 
-import yfcdb.member.Member;
-import yfcdb.member.MemberList;
 import yfcdb.member.Person;
 import yfcdb.member.PersonList;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.Position;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 /**
@@ -29,7 +23,6 @@ public class MembersTablePanel extends JPanel {
 
     private RowFilter<DefaultTableModel,Integer> globeFilter = new RowFilter<DefaultTableModel,Integer>() {
         public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
-            DefaultTableModel dtModel = entry.getModel();
             String phoneNumber = (String)entry.getValue(5);
             //true if in globePrefix array
             for (String prefix: globePrefix) {
@@ -43,9 +36,8 @@ public class MembersTablePanel extends JPanel {
 
     private RowFilter<DefaultTableModel,Integer> smartFilter = new RowFilter<DefaultTableModel,Integer>() {
         public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
-            DefaultTableModel dtModel = entry.getModel();
             String phoneNumber = (String)entry.getValue(5);
-            //true if in globePrefix array
+            //true if in smartPrefix array
             for (String prefix: smartPrefix) {
                 if (phoneNumber.startsWith(prefix)) {
                     return true;
@@ -57,7 +49,7 @@ public class MembersTablePanel extends JPanel {
 
     public MembersTablePanel() {
         setLayout(new BorderLayout());
-        JLabel jlTitle = new JLabel("Members List");
+        JLabel jlTitle = new JLabel("<html><h1>Members List</h1></html>");
 
         String[] columnNames = {"toString()", "Position", "Last Name", "First Name", "Birthday", "Contact No"};
         defaultTableModel = new DefaultTableModel(columnNames, 0);

@@ -54,5 +54,17 @@ public class PersonList {
 
         System.out.println(personArrayList.size());
     }
+
+    public String getChapterLeaders() {
+        String out = "";
+        for (Person person: personArrayList) {
+            System.out.println("+");
+            if (person.getPosition().equals(Position.CHAPTER_LEADER)) {
+                out += person.getFullName() + "/";
+                System.out.println(out);
+            }
+        }
+        return out;
+    }
 }
 

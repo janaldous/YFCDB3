@@ -173,10 +173,33 @@ public class Event {
     }
 
     public Object[] toArray() {
-        return new Object[] {dt.format(startDate), name, type, venue, notes, getNoOfAttendees()};
+        return new Object[] {dt.format(startDate), this, type, venue, notes, getNoOfAttendees()};
+    }
+
+    public Object[] toArray(Person person) {
+        return new Object[] {dt.format(startDate), this, attendeesMap.get(person)};
     }
 
     public HashMap<Person, Role> getAttendees() {
         return attendeesMap;
+    }
+
+    public boolean wasAttendedBy(Person person) {
+        return attendeesMap.containsKey(person);
+    }
+
+    public boolean wasOn(int month, int year) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        if (cal.get(Calendar.MONTH) == month && cal.get(Calendar.YEAR) == year) {
+            return true;
+        }
+        return false;
+    }
+
+    public int getDay() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        return cal.get(Calendar.DAY_OF_MONTH);
     }
 }

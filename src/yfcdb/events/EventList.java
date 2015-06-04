@@ -40,6 +40,10 @@ public class EventList {
         return eventArrayList.contains(event);
     }
 
+    public boolean removeEvent(Event event) {
+        return eventArrayList.remove(event);
+    }
+
     public void print() {
         for (Event event: eventArrayList) {
             System.out.println(event);
@@ -48,7 +52,18 @@ public class EventList {
         System.out.println(eventArrayList.size());
     }
 
+    //TODO potentially dangerous to do this. should not reveal insides
     public ArrayList<Event> getEventArrayList() {
         return eventArrayList;
+    }
+
+    public ArrayList<Event> getEventsOn(int month, int year) {
+        ArrayList<Event> list = new ArrayList<Event>();
+        for (Event event: eventArrayList) {
+            if (event.wasOn(month, year)) {
+                list.add(event);
+            }
+        }
+        return list;
     }
 }
