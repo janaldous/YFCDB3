@@ -191,6 +191,8 @@ public class Person {
         return firstname + " '" + nickname + "' " + middlename + " " + lastname;
     }
 
+    public String getShortName() { return nickname + " " + lastname; }
+
     public String getGender() {
         return gender;
     }

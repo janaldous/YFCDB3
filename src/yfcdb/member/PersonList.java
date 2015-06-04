@@ -58,11 +58,29 @@ public class PersonList {
     public String getChapterLeaders() {
         String out = "";
         for (Person person: personArrayList) {
-            System.out.println("+");
             if (person.getPosition().equals(Position.CHAPTER_LEADER)) {
                 out += person.getFullName() + "/";
-                System.out.println(out);
             }
+        }
+        if (!out.isEmpty()) {
+            out = out.substring(0, out.length()-1);
+        } else {
+            out = "none chosen";
+        }
+        return out;
+    }
+
+    public String getCoordinators() {
+        String out = "";
+        for (Person person: personArrayList) {
+            if (person.getPosition().equals(Position.COORDINATOR)) {
+                out += person.getFullName() + "/";
+            }
+        }
+        if (!out.isEmpty()) {
+            out = out.substring(0, out.length()-1);
+        } else {
+            out = "none chosen";
         }
         return out;
     }

@@ -4,7 +4,7 @@ package yfcdb.member;
  * Created by janaldoustorres on 19/05/15.
  */
 public enum Position {
-    MEMBER, CHAPTER_LEADER, COORDINATOR, HOUSEHOLD_HEAD;
+    MEMBER, CHAPTER_LEADER, COORDINATOR, HOUSEHOLD_HEAD, LIE_LOW, RETIRED;
 
     public String toString() {
         switch (this) {

@@ -12,6 +12,20 @@ public enum EventType {
     ILC, SECTOR_CONFERENCE, PROVINCIAL_CONFERENCE, REGIONAL_CONFERENCE,
     PARISH_LINKAGE, OTHERS;
 
+    //supposed to override valueOf() method in superclass
+    public static EventType get(String name) {
+        EventType[] eventTypes = values();
+        String[] names = new String[eventTypes.length];
+
+        for (int i = 0; i < eventTypes.length; i++) {
+            names[i] = eventTypes[i].toString();
+            if (names[i].equals(name)) {
+                return eventTypes[i];
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         switch (this) {

@@ -66,4 +66,15 @@ public class EventList {
         }
         return list;
     }
+
+    public ArrayList<Event> getEventsOfType(EventType type, Date start, Date end) {
+        ArrayList<Event> list = new ArrayList<Event>();
+        for (Event event: eventArrayList) {
+            if (event.getType().equals(type)
+                    && event.getStartDate().after(start) && event.getEndDate().before(end)) {
+                list.add(event);
+            }
+        }
+        return list;
+    }
 }

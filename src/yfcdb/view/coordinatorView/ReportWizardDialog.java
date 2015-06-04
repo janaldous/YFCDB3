@@ -1,5 +1,7 @@
 package yfcdb.view.coordinatorView;
 
+import yfcdb.files.XSLXReport;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -55,10 +57,10 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
         setTitle("Report Wizard");
 
         JLabel jlReportTitle = new JLabel("Report title");
-        jtfReportTitle = new JTextField("");
+        jtfReportTitle = new JTextField("WEST 2 YFC ACTIVITY REPORT");
 
         JLabel jlReportFooter = new JLabel("Report notes");
-        jtaReportFooter = new JTextArea("");
+        jtaReportFooter = new JTextArea("footer");
         jtaReportFooter.setToolTipText("Enter for notes");
 
         JLabel jlDateFrom = new JLabel("Date from");
@@ -108,6 +110,8 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
             String footer = jtaReportFooter.getText();
             Date start = fromDateSpinner.getDate();
             Date end = toDateSpinner.getDate();
+
+            new XSLXReport(title, footer, start, end);
 
             mainWindow.changeCenterPanelToReportTable(start, end);
         } else {
