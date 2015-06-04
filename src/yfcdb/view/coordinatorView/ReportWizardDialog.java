@@ -16,8 +16,7 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
 
     private final JTextField jtfReportTitle;
     private final JTextArea jtaReportFooter;
-    private final DateSpinner fromDateSpinner;
-    private final DateSpinner toDateSpinner;
+    private final DateSpinner dateSpinner;
     private final JComboBox jcbFileType;
     private MainWindow mainWindow;
 
@@ -36,7 +35,7 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
                     latestDate,
                     Calendar.YEAR);
             spinner = new JSpinner(model);
-            spinner.setEditor(new JSpinner.DateEditor(spinner, "MMM yyyy"));
+            spinner.setEditor(new JSpinner.DateEditor(spinner, "yyyy"));
 
             add(spinner);
         }
@@ -63,11 +62,8 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
         jtaReportFooter = new JTextArea("footer");
         jtaReportFooter.setToolTipText("Enter for notes");
 
-        JLabel jlDateFrom = new JLabel("Date from");
-        fromDateSpinner = new DateSpinner();
-
-        JLabel jlDateTo = new JLabel("Date to");
-        toDateSpinner = new DateSpinner();
+        JLabel jlDateYear = new JLabel("Date from");
+        dateSpinner = new DateSpinner();
 
         JLabel jlFileType = new JLabel("File type");
         jcbFileType = new JComboBox(new String[] {"xslx", "csv", "pdf"});
@@ -83,10 +79,8 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
         add(jtfReportTitle);
         add(jlReportFooter);
         add(jtaReportFooter);
-        add(jlDateFrom);
-        add(fromDateSpinner);
-        add(jlDateTo);
-        add(toDateSpinner);
+        add(jlDateYear);
+        add(dateSpinner);
         add(jlFileType);
         add(jcbFileType);
         add(bottomPanel);
@@ -97,8 +91,6 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
     private boolean isFilledOut() {
         if (jtfReportTitle.getText().isEmpty() || jtaReportFooter.getText().isEmpty()) {
             return false;
-        } else if (fromDateSpinner.getDate().after(toDateSpinner.getDate())) {
-            return false;
         }
         return true;
     }
@@ -108,8 +100,8 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
         if (isFilledOut()) {
             String title = jtfReportTitle.getText().toUpperCase();
             String footer = jtaReportFooter.getText();
-            Date start = fromDateSpinner.getDate();
-            Date end = toDateSpinner.getDate();
+            Calendar cal = Calendar.getInstance();
+            Date start = dateSpinner.getDate();
 
             new XSLXReport(title, footer, start, end);
 

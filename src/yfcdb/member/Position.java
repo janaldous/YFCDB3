@@ -12,6 +12,8 @@ public enum Position {
             case CHAPTER_LEADER: return "Chapter leader";
             case COORDINATOR: return "Coordinator";
             case HOUSEHOLD_HEAD: return "Household head";
+            case LIE_LOW: return "Lie low";
+            case RETIRED: return "Retired";
             default: return null;
         }
     }

@@ -59,7 +59,7 @@ public class PersonList {
         String out = "";
         for (Person person: personArrayList) {
             if (person.getPosition().equals(Position.CHAPTER_LEADER)) {
-                out += person.getFullName() + "/";
+                out += person.getShortName() + "/";
             }
         }
         if (!out.isEmpty()) {
@@ -74,7 +74,7 @@ public class PersonList {
         String out = "";
         for (Person person: personArrayList) {
             if (person.getPosition().equals(Position.COORDINATOR)) {
-                out += person.getFullName() + "/";
+                out += person.getShortName() + "/";
             }
         }
         if (!out.isEmpty()) {
