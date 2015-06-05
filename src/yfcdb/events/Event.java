@@ -202,4 +202,10 @@ public class Event {
         cal.setTime(startDate);
         return cal.get(Calendar.DAY_OF_MONTH);
     }
+
+    public ArrayList<Person> getPersonsWhoAttended() {
+        ArrayList<Person> personArrayList = new ArrayList<Person>();
+        personArrayList.addAll(attendeesMap.keySet());
+        return personArrayList;
+    }
 }

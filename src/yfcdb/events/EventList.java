@@ -1,25 +1,20 @@
 package yfcdb.events;
 
-import com.cedarsoftware.util.io.JsonReader;
-import com.cedarsoftware.util.io.JsonWriter;
-import yfcdb.member.*;
+import yfcdb.member.Person;
 
-import javax.swing.*;
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Observable;
 
 /**
  * Created by janaldoustorres on 01/06/15.
  */
-public class EventList {
+public class EventList extends Observable {
     private static ArrayList<Event> eventArrayList;
     private static EventList eventList = new EventList();
 
     public EventList() {
         eventArrayList = new ArrayList<Event>();
-        //uploadFromFile();
     }
 
     public static EventList getInstance() {
@@ -33,6 +28,8 @@ public class EventList {
     public void addEvent(Event event) {
         if (!eventArrayList.contains(event)) {
             eventArrayList.add(event);
+            setChanged();
+            notifyObservers();
         }
     }
 
@@ -41,6 +38,8 @@ public class EventList {
     }
 
     public boolean removeEvent(Event event) {
+        setChanged();
+        notifyObservers();
         return eventArrayList.remove(event);
     }
 
@@ -78,6 +77,16 @@ public class EventList {
         return list;
     }
 
+    public ArrayList<Event> getEventsOfType(EventType type) {
+        ArrayList<yfcdb.events.Event> list = new ArrayList<yfcdb.events.Event>();
+        for (yfcdb.events.Event event: eventArrayList) {
+            if (event.getType().equals(type)) {
+                list.add(event);
+            }
+        }
+        return list;
+    }
+
     public ArrayList<Event> getPastoralFormationEvents() {
         ArrayList<Event> list = new ArrayList<Event>();
         for (Event event: eventArrayList) {
@@ -85,6 +94,17 @@ public class EventList {
                 list.add(event);
             }
         }
+        return list;
+    }
+
+    public ArrayList<Event> getEventsAttendedBy(Person person) {
+        ArrayList<Event> list = new ArrayList<Event>();
+        for (Event event: eventArrayList) {
+            if (event.wasAttendedBy(person)) {
+                list.add(event);
+            }
+        }
+
         return list;
     }
 }

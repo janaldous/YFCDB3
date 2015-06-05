@@ -163,7 +163,7 @@ public class CoordinatorInfoPanel extends JPanel implements PersonInfoPanelTempl
         private JComboBox jcbPrefix, jcbShirtSize;
 
         private PersonalPanel() {
-            setBorder(BorderFactory.createTitledBorder("Other"));
+            setBorder(BorderFactory.createTitledBorder("Personal"));
             setLayout(new GridLayout(2,1));
 
             JPanel jpTop = new JPanel(new GridLayout(1,2));
@@ -177,6 +177,7 @@ public class CoordinatorInfoPanel extends JPanel implements PersonInfoPanelTempl
             jcbPrefix = new JComboBox<Prefix>(Prefix.values());
             JLabel jlShirtSize = new JLabel("Shirt Size:");
             jcbShirtSize = new JComboBox<ShirtSize>(ShirtSize.values());
+            jcbShirtSize.setSelectedItem(ShirtSize.M);
 
             jpBottom.add(jlPrefix);
             jpBottom.add(jcbPrefix);
@@ -257,7 +258,7 @@ public class CoordinatorInfoPanel extends JPanel implements PersonInfoPanelTempl
             String city = jtfAddressCity.getText();
             String postalCode = jtfPostCode.getText();
             String contact = jtfContact.getText();
-            String email = jtfContact.getText();
+            String email = jtfEmail.getText();
             Address address = new Address(street, city, village, postalCode);
             coordinator.setAddress(address);
             coordinator.setCellphoneNumber(contact);
@@ -272,9 +273,7 @@ public class CoordinatorInfoPanel extends JPanel implements PersonInfoPanelTempl
             jbDelete.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    PersonList personList = PersonList.getInstance();
-                    personList.removePerson(coordinator);
-                    mainWindow.changeCenterPanelToEmpty();
+                    //deletePerson();
                 }
             });
             JButton jbSave = new JButton("Save");
@@ -357,5 +356,11 @@ public class CoordinatorInfoPanel extends JPanel implements PersonInfoPanelTempl
     @Override
     public void setPerson(Person person) {
         this.coordinator = (Coordinator)person;
+    }
+
+    private void deletePerson() {
+        PersonList personList = PersonList.getInstance();
+        personList.removePerson(coordinator);
+        mainWindow.changeCenterPanelToEmpty();
     }
 }

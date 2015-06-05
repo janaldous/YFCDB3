@@ -269,13 +269,13 @@ public class Person {
         this.shirtSize = shirtSize;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj instanceof Person && ((Person)obj).id == this.id) {
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (obj == this) {
+//            return true;
+//        } else if (obj instanceof Person && ((Person)obj).id == this.id) {
+//            return true;
+//        }
+//        return false;
+//    }
 }

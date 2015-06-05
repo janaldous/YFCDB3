@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by janaldoustorres on 23/05/15.
@@ -22,7 +24,7 @@ public class MainWindow extends JFrame {
     private final SidePanel sidePanel = new SidePanel();
     private final static Dimension preferredSize = new Dimension(1000, 700);
 
-    private class SidePanel extends JPanel {
+    private class SidePanel extends JPanel implements Observer {
         private JTextField jtfSearchBar;
         private DefaultListModel personListModel, eventListModel;
         private JList jList;
@@ -112,6 +114,9 @@ public class MainWindow extends JFrame {
             jpBottom.add(jbEvent);
 
             add(jpBottom, BorderLayout.SOUTH);
+
+            PersonList.getInstance().addObserver(this);
+            EventList.getInstance().addObserver(this);
         }
 
         private void populatePersonList() {
@@ -156,6 +161,11 @@ public class MainWindow extends JFrame {
             populateEventList();
             populatePersonList();
         }
+
+        @Override
+        public void update(Observable o, Object arg) {
+            populateLists();
+        }
     }
 
     public MainWindow() {
@@ -169,7 +179,7 @@ public class MainWindow extends JFrame {
             }
         });
 
-        centerPanel = new JPanel();
+        centerPanel = emptyPanel;
 
         uploadFiles();
 

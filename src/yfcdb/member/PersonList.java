@@ -9,11 +9,12 @@ import com.cedarsoftware.util.io.JsonWriter;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Observable;
 
 /**
  * Created by janaldoustorres on 29/05/15.
  */
-public class PersonList {
+public class PersonList extends Observable {
     private static ArrayList<Person> personArrayList;
     private static PersonList personList = new PersonList();
 
@@ -36,6 +37,8 @@ public class PersonList {
 
     public void addPerson(Person person) {
         personArrayList.add(person);
+        setChanged();
+        notifyObservers();
     }
 
     public boolean contains(Person person) {
@@ -44,6 +47,8 @@ public class PersonList {
     }
 
     public boolean removePerson(Person person) {
+        setChanged();
+        notifyObservers();
         return personArrayList.remove(person);
     }
 
@@ -84,5 +89,7 @@ public class PersonList {
         }
         return out;
     }
+
+
 }
 

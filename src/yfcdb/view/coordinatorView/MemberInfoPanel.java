@@ -162,17 +162,16 @@ public class MemberInfoPanel extends JPanel {
     }
     
     public class PersonalPanel extends FormPanel {
-        private final String[] yesNoList = new String[] {"-", "Y", "N"};
-        private final String[] genderList = new String[] {"-", "M", "F"};
+        private final String[] yesNoList = new String[] {"N", "Y"};
+        private final String[] genderList = new String[] {"M", "F"};
         private DatePanel dpBirthday;
         private JComboBox jcbGender, jcbKfcTransfer, jcbBloodType, jcbShirtSize;
 
         private PersonalPanel() {
-            setBorder(BorderFactory.createTitledBorder("Other"));
+            setBorder(BorderFactory.createTitledBorder("Personal"));
             setLayout(new GridLayout(2,1));
             JLabel jlBirthday = new JLabel("Birthday *:");
             dpBirthday = new DatePanel(briefingPanel);
-
 
             JLabel jlGender = new JLabel("Gender *:");
             jcbGender = new JComboBox<String>(genderList);
@@ -185,6 +184,7 @@ public class MemberInfoPanel extends JPanel {
 
             JLabel jlShirtSize = new JLabel("Shirt Size:");
             jcbShirtSize = new JComboBox<ShirtSize>(ShirtSize.values());
+            jcbShirtSize.setSelectedItem(ShirtSize.M);
 
             //first row
             JPanel jpFirstRow = new JPanel();
@@ -238,7 +238,11 @@ public class MemberInfoPanel extends JPanel {
     }
 
     public class ContactPanel extends FormPanel {
-        private JTextField jtfAddressStreet, jtfAddressVillage, jtfAddressCity, jtfPostCode, jtfContact, jtfEmail;
+        private String[] villages = {"SRV1", "SRV2", "SRV3", "SRV4", "SRE1", "SRE2", "SJV1", "SJV2", "SJV3",
+                "La Residencia", "Inchikan"};
+        private String[] cities = {"Sta Rosa", "Biñan"};
+        private JTextField jtfAddressStreet, jtfPostCode, jtfContact, jtfEmail;
+        private JComboBox<String> jcbAddressVillage, jcbAddressCity;
 
         private ContactPanel() {
             setLayout(new GridLayout(6, 1));
@@ -247,13 +251,15 @@ public class MemberInfoPanel extends JPanel {
             jtfAddressStreet = new JTextField();
 
             JLabel jlAddressVillage = new JLabel("Address (Village) *:");
-            jtfAddressVillage = new JTextField();
+            jcbAddressVillage = new JComboBox<String>(villages);
+            jcbAddressVillage.setEditable(true);
 
             JLabel jlAddressCity = new JLabel("Address (City)");
-            jtfAddressCity = new JTextField();
+            jcbAddressCity = new JComboBox<String>(cities);
+            jcbAddressCity.setEditable(true);
 
             JLabel jlPostCode = new JLabel("Post code");
-            jtfPostCode = new JTextField();
+            jtfPostCode = new JTextField("4026");
 
             JLabel jlContact = new JLabel("Contact No *:");
             jtfContact = new JTextField();
@@ -264,9 +270,9 @@ public class MemberInfoPanel extends JPanel {
             add(jlAddressStreet);
             add(jtfAddressStreet);
             add(jlAddressVillage);
-            add(jtfAddressVillage);
+            add(jcbAddressVillage);
             add(jlAddressCity);
-            add(jtfAddressCity);
+            add(jcbAddressCity);
             add(jlPostCode);
             add(jtfPostCode);
             add(jlContact);
@@ -278,8 +284,8 @@ public class MemberInfoPanel extends JPanel {
         public void setInfo(Member member) {
             Address address = member.getAddress();
             jtfAddressStreet.setText(address.getStreet());
-            jtfAddressVillage.setText(address.getVillage());
-            jtfAddressCity.setText(address.getCity());
+            jcbAddressVillage.setSelectedItem(address.getVillage());
+            jcbAddressCity.setSelectedItem(address.getCity());
             jtfPostCode.setText(address.getPostalCode());
             jtfContact.setText(member.getCellphoneNumber());
             jtfEmail.setText(member.getEmail());
@@ -288,11 +294,11 @@ public class MemberInfoPanel extends JPanel {
         @Override
         public Member getInfo(Member member) {
             String street = jtfAddressStreet.getText();
-            String village = jtfAddressVillage.getText();
-            String city = jtfAddressCity.getText();
+            String village = (String)jcbAddressVillage.getSelectedItem();
+            String city = (String)jcbAddressCity.getSelectedItem();
             String postalCode = jtfPostCode.getText();
             String contact = jtfContact.getText();
-            String email = jtfContact.getText();
+            String email = jtfEmail.getText();
             Address address = new Address(street, city, village, postalCode);
             member.setAddress(address);
             member.setCellphoneNumber(contact);
@@ -641,9 +647,7 @@ public class MemberInfoPanel extends JPanel {
             jbDelete.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    PersonList personList = PersonList.getInstance();
-                    personList.removePerson(member);
-                    mainWindow.changeCenterPanelToEmpty();
+                    //deletePerson();
                 }
             });
             JButton jbSave = new JButton("Save");
@@ -743,4 +747,9 @@ public class MemberInfoPanel extends JPanel {
 
     public Member getMember() { return member; }
 
+    private void deletePerson() {
+        PersonList personList = PersonList.getInstance();
+        personList.removePerson(member);
+        mainWindow.changeCenterPanelToEmpty();
+    }
 }

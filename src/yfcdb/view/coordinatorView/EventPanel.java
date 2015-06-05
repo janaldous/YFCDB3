@@ -6,6 +6,8 @@ import yfcdb.member.Member;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,9 +30,25 @@ public class EventPanel extends EventFormPanel {
 
         JLabel jlEventName = new JLabel("Name of Event *:");
         jtfEventName = new JTextField("");
+        jtfEventName.setEditable(false);
 
         JLabel jlEventType = new JLabel("Type of Event *:");
         jcbEventType = new JComboBox<EventType>(EventType.values());
+        jcbEventType.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EventType selectedType = (EventType)jcbEventType.getSelectedItem();
+                if (selectedType.equals(EventType.OTHERS) || selectedType.equals(EventType.PARISH_LINKAGE)
+                        || selectedType.equals(EventType.SECTOR_CONFERENCE)
+                        || selectedType.equals(EventType.PROVINCIAL_CONFERENCE)
+                        || selectedType.equals(EventType.REGIONAL_CONFERENCE)) {
+                    jtfEventName.setEditable(true);
+                } else {
+                    jtfEventName.setText("");
+                    jtfEventName.setEditable(false);
+                }
+            }
+        });
 
         JLabel jlStartDate = new JLabel("Start Date *:");
         startDatePanel = new DatePanelWithTime();

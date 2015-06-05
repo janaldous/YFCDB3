@@ -1,6 +1,8 @@
 package yfcdb.view.coordinatorView;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -9,7 +11,7 @@ import java.util.Date;
 /**
  * Created by janaldoustorres on 22/05/15.
  */
-public class DatePanel extends JPanel implements ActionListener {
+public class DatePanel extends JPanel implements ChangeListener {
     private static final int yearRange = 23;
     protected final JSpinner spinner;
     protected final SpinnerDateModel model;
@@ -19,11 +21,13 @@ public class DatePanel extends JPanel implements ActionListener {
     public DatePanel(MemberInfoPanel.BriefingPanel briefingPanel) {
         this();
         this.briefingPanel = briefingPanel;
+        spinner.addChangeListener(this);
     }
 
     public DatePanel(CoordinatorInfoPanel.BriefingPanel briefingPanel1) {
         this();
         this.briefingPanel1 = briefingPanel1;
+        spinner.addChangeListener(this);
     }
 
     public DatePanel() {
@@ -39,6 +43,7 @@ public class DatePanel extends JPanel implements ActionListener {
                 Calendar.YEAR);
         spinner = new JSpinner(model);
         spinner.setEditor(new JSpinner.DateEditor(spinner, "MMM dd yyyy"));
+
 
         add(spinner);
     }
@@ -75,7 +80,7 @@ public class DatePanel extends JPanel implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void stateChanged(ChangeEvent e) {
         if (briefingPanel == null) {
             briefingPanel1.setAge(getYearsFromToday());
         } else {
