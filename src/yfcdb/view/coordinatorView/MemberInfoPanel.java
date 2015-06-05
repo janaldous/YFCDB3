@@ -217,7 +217,7 @@ public class MemberInfoPanel extends JPanel {
             jcbGender.setSelectedItem(member.getGender());
             jcbKfcTransfer.setSelectedItem(member.isKfcTransfer());
             jcbBloodType.setSelectedItem(member.getBloodType());
-            jcbShirtSize.setSelectedItem(member.getShirtSize().toString());
+            jcbShirtSize.setSelectedItem(member.getShirtSize());
         }
 
         @Override

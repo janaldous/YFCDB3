@@ -49,6 +49,7 @@ public class CoordinatorInfoPanel extends JPanel implements PersonInfoPanelTempl
 
             JLabel jlPosition = new JLabel("YFC Position:");
             jcbPosition = new JComboBox<Position>(new Position[] {Position.COORDINATOR});
+            jcbPosition.setSelectedItem(Position.COORDINATOR);
 
 
             String[] yfcAgeList = new String[ageRange];
@@ -163,22 +164,27 @@ public class CoordinatorInfoPanel extends JPanel implements PersonInfoPanelTempl
 
         private PersonalPanel() {
             setBorder(BorderFactory.createTitledBorder("Other"));
-            setLayout(new GridLayout(1,6));
+            setLayout(new GridLayout(2,1));
+
+            JPanel jpTop = new JPanel(new GridLayout(1,2));
             JLabel jlBirthday = new JLabel("Birthday *:");
             dpBirthday = new DatePanel(briefingPanel);
-            
-            JLabel jlPrefix = new JLabel("Gender *:");
-            jcbPrefix = new JComboBox<Prefix>(Prefix.values());
+            jpTop.add(jlBirthday);
+            jpTop.add(dpBirthday);
 
+            JPanel jpBottom = new JPanel(new GridLayout(1, 4));
+            JLabel jlPrefix = new JLabel("Prefix *:");
+            jcbPrefix = new JComboBox<Prefix>(Prefix.values());
             JLabel jlShirtSize = new JLabel("Shirt Size:");
             jcbShirtSize = new JComboBox<ShirtSize>(ShirtSize.values());
 
-            add(jlBirthday);
-            add(dpBirthday);
-            add(jlPrefix);
-            add(jcbPrefix);
-            add(jlShirtSize);
-            add(jcbShirtSize);
+            jpBottom.add(jlPrefix);
+            jpBottom.add(jcbPrefix);
+            jpBottom.add(jlShirtSize);
+            jpBottom.add(jcbShirtSize);
+
+            add(jpTop);
+            add(jpBottom);
         }
 
         public void setInfo(Coordinator coordinator) {

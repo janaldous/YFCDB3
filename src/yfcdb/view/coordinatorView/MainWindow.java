@@ -67,10 +67,12 @@ public class MainWindow extends JFrame {
                     if (list.getModel() == personListModel) {
                         if (e.getClickCount() == doubleClick) {// Double-click detected
                             int index = list.locationToIndex(e.getPoint());
+                            Person personToShow = (Person) personListModel.getElementAt(index);
 
                             if (personListModel.getElementAt(index) instanceof Member) {
-                                Member memberToShow = (Member) personListModel.getElementAt(index);
-                                changeCenterPanelToMember(memberToShow);
+                                changeCenterPanelToMember((Member) personToShow);
+                            } else if (personListModel.getElementAt(index) instanceof Coordinator) {
+                                changeCenterPanelToCoordinator((Coordinator) personToShow);
                             }
                         }
                     } else if (list.getModel() == eventListModel) {
@@ -257,6 +259,14 @@ public class MainWindow extends JFrame {
             }
         });
         mView.add(miViewPastoralFormation);
+        MenuItem miClear = new MenuItem("Clear");
+        miClear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCenterPanelToEmpty();
+            }
+        });
+        mView.add(miClear);
 
         Menu mEvents = new Menu("Events");
         MenuItem miAddEvent = new MenuItem("Add event");
@@ -297,15 +307,18 @@ public class MainWindow extends JFrame {
     }
 
     private void changeCenterPanelToNewCoordinator() {
-
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JLabel("<html><h1>New Coordinator</h1></html>"), BorderLayout.NORTH);
+        panel.add(new CoordinatorInfoPanel(this, new Coordinator()), BorderLayout.CENTER);
+        changeCenterPanel(panel);
     }
 
     public void changeCenterPanelToCoordinator(Coordinator coordinator) {
-
+        changeCenterPanel(new CoordinatorInfoPanel(this, coordinator));
     }
 
     private void changeCenterPanelToPastoralFormation() {
-
+        changeCenterPanel(new PastoralFormationTablePanel());
     }
 
     private void changeCenterPanelToNewEvent() {

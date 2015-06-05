@@ -7,6 +7,8 @@ public class Coordinator extends Person {
     private Prefix prefix;
     private ShirtSize shirtSize;
 
+    public Coordinator() { super(); }
+
     public Coordinator(Prefix prefix, String fn, String mn, String ln, String nn, YFCGroup group) {
         setID(numberOfMembers++);
         this.prefix = prefix;
@@ -21,9 +23,7 @@ public class Coordinator extends Person {
     }
 
     @Override
-    public String toString() {
-        return prefix + " " + firstname + " '" + nickname + "' " + middlename + " " + lastname;
-    }
+    public String getShortName() { return prefix + " " +  nickname + " " + lastname; }
 
     public Parent toParent() {
         String relationship;

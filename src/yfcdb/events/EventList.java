@@ -77,4 +77,14 @@ public class EventList {
         }
         return list;
     }
+
+    public ArrayList<Event> getPastoralFormationEvents() {
+        ArrayList<Event> list = new ArrayList<Event>();
+        for (Event event: eventArrayList) {
+            if (event.getType().isPastoralFormation()) {
+                list.add(event);
+            }
+        }
+        return list;
+    }
 }

@@ -12,6 +12,11 @@ public enum EventType {
     ILC, SECTOR_CONFERENCE, PROVINCIAL_CONFERENCE, REGIONAL_CONFERENCE,
     PARISH_LINKAGE, OTHERS;
 
+    private final static EventType[] pastoral = {EventType.YOUTH_CAMP_TRAINING, EventType.WORSHIP_WORKSHOP, EventType.HLT,
+            EventType.YOUTH_CAMP, EventType.FAMILY_CULTURE, EventType.COVENANT_ORIENTATION, EventType.YOUTH_POWER,
+            EventType.DISCOVERY_CAMP, EventType.PARENTS_HONORING, EventType.HUNDRED_PERCENT_FREE, EventType.STAKE_FOR_THE_NATION,
+            EventType.VOCATION_RECOLLECTION, EventType.BEST_WEEKEND, EventType.CHURCH_AND_SACRAMENT, EventType.YOUTH_ADVOCATE};
+
     //supposed to override valueOf() method in superclass
     public static EventType get(String name) {
         EventType[] eventTypes = values();
@@ -69,5 +74,18 @@ public enum EventType {
         }
 
         return names;
+    }
+
+    public boolean isPastoralFormation() {
+        for (EventType type: pastoral) {
+            if (this == type) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static EventType[] pastoralValues() {
+        return pastoral;
     }
 }
