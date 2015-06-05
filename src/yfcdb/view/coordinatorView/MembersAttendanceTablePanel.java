@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,9 @@ public class MembersAttendanceTablePanel extends JPanel {
         JTable jtMembers = new JTable(defaultTableModel);
         jtMembers.setPreferredScrollableViewportSize(new Dimension(200, 300));
         setUpRoleColumn(jtMembers.getColumnModel().getColumn(1));
+
+        final TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(defaultTableModel);
+        jtMembers.setRowSorter(sorter);
 
         populateTable();
 
@@ -76,9 +80,6 @@ public class MembersAttendanceTablePanel extends JPanel {
 
     public yfcdb.events.Event setInfo(yfcdb.events.Event event) {
         HashMap<Person, Role> attendeeMap = event.getAttendees();
-
-        System.out.print("set");
-        System.out.println(attendeeMap);
 
         for (int row = 0; row < defaultTableModel.getRowCount(); row++) {
             Person person = (Person)defaultTableModel.getValueAt(row, 0);

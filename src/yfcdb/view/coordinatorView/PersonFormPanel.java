@@ -8,9 +8,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 /**
- * Created by janaldoustorres on 28/05/15.
+ * Created by janaldoustorres on 05/06/15.
  */
-public abstract class FormPanel extends JPanel {
+public abstract class PersonFormPanel<P> extends JPanel {
     private ArrayList<Component> componentsList = new ArrayList<Component>();
 
     @Override
@@ -31,7 +31,7 @@ public abstract class FormPanel extends JPanel {
         componentsList.add(component);
     }
 
-    public abstract void setInfo(Member member);
+    public abstract void setInfo(P person);
 
     public boolean isFilledOut() {
         boolean isFilled = true;
@@ -60,5 +60,5 @@ public abstract class FormPanel extends JPanel {
         return isFilled;
     }
 
-    public abstract Member getInfo(Member member);
+    public abstract void getInfo(P person);
 }

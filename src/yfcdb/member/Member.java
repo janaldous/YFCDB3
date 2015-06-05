@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 
 public class Member extends Person {
-    private Address address;
     private boolean kfcToYfc;
     private BloodType bloodType;
     private Education education;
@@ -29,7 +28,6 @@ public class Member extends Person {
         super();
         position = Position.MEMBER;
 
-        address = new Address();
         education = new Education();
         father = new Parent();
         mother = new Parent();
@@ -99,26 +97,6 @@ public class Member extends Person {
         this.education = education;
     }
 
-    public int getYfcAge() {
-        Calendar cal = Calendar.getInstance();
-        return cal.get(Calendar.YEAR) - yfcEntryYear;
-    }
-
-    public int getYfcEntryYear() {
-        return this.yfcEntryYear;
-    }
-
-    public void setYfcEntryYear(int yfcEntryYear) {
-        this.yfcEntryYear = yfcEntryYear;
-    }
-
-    public ShirtSize getShirtSize() {
-        return shirtSize;
-    }
-
-    public void setShirtSize(ShirtSize shirtSize) {
-        this.shirtSize = shirtSize;
-    }
 
     public String getSpecialSkills() {
         return specialSkills;

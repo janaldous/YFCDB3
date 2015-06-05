@@ -10,6 +10,6 @@ import java.util.Date;
 public class DatePanelWithTime extends DatePanel {
     public DatePanelWithTime() {
         super();
-        spinner.setEditor(new JSpinner.DateEditor(spinner, "MMM dd yyyy HH:mm"));
+        spinner.setEditor(new JSpinner.DateEditor(spinner, "MMM dd yyyy h:mm a"));
     }
 }

@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -159,6 +160,7 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMenuBar(setupMenuBar());
         setPreferredSize(preferredSize);
+        setTitle("YFC");
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 saveFiles(); System.exit(EXIT_ON_CLOSE);
@@ -247,6 +249,14 @@ public class MainWindow extends JFrame {
             }
         });
         mView.add(miViewEvents);
+        MenuItem miViewPastoralFormation = new MenuItem("View pastoral formation attendance table");
+        miViewPastoralFormation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCenterPanelToPastoralFormation();
+            }
+        });
+        mView.add(miViewPastoralFormation);
 
         Menu mEvents = new Menu("Events");
         MenuItem miAddEvent = new MenuItem("Add event");
@@ -268,7 +278,14 @@ public class MainWindow extends JFrame {
             }
         });
         mMember.add(miAddMember);
-
+        MenuItem miAddCoordinator = new MenuItem("Add coordinator");
+        miAddCoordinator.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCenterPanelToNewCoordinator();
+            }
+        });
+        mMember.add(miAddCoordinator);
 
         menuBar.add(mFile);
         menuBar.add(mEdit);
@@ -277,6 +294,18 @@ public class MainWindow extends JFrame {
         menuBar.add(mMember);
 
         return menuBar;
+    }
+
+    private void changeCenterPanelToNewCoordinator() {
+
+    }
+
+    public void changeCenterPanelToCoordinator(Coordinator coordinator) {
+
+    }
+
+    private void changeCenterPanelToPastoralFormation() {
+
     }
 
     private void changeCenterPanelToNewEvent() {

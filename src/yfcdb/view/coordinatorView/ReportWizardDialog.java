@@ -3,6 +3,8 @@ package yfcdb.view.coordinatorView;
 import yfcdb.files.XSLXReport;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,7 +22,7 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
     private final JComboBox jcbFileType;
     private MainWindow mainWindow;
 
-    private class DateSpinner extends JPanel {
+    private class DateSpinner extends JPanel implements ChangeListener {
         private final JSpinner spinner;
 
         private DateSpinner() {
@@ -36,6 +38,7 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
                     Calendar.YEAR);
             spinner = new JSpinner(model);
             spinner.setEditor(new JSpinner.DateEditor(spinner, "yyyy"));
+            spinner.addChangeListener(this);
 
             add(spinner);
         }
@@ -48,25 +51,34 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
             Date date = (Date)spinner.getValue();
             return date;
         }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dateSpinner.getDate());
+            int year = cal.get(Calendar.YEAR);
+            changeYear(year);
+        }
     }
 
     public ReportWizardDialog(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
-        setLayout(new GridLayout(6, 2));
+        setLayout(new GridLayout(5, 2));
         setTitle("Report Wizard");
 
         JLabel jlReportTitle = new JLabel("Report title");
         jtfReportTitle = new JTextField("WEST 2 YFC ACTIVITY REPORT");
+        changeYear(Calendar.getInstance().get(Calendar.YEAR));
 
-        JLabel jlReportFooter = new JLabel("Report notes");
-        jtaReportFooter = new JTextArea("footer");
+        JLabel jlReportFooter = new JLabel("Footer (for notes):");
+        jtaReportFooter = new JTextArea("");
         jtaReportFooter.setToolTipText("Enter for notes");
 
-        JLabel jlDateYear = new JLabel("Date from");
+        JLabel jlDateYear = new JLabel("Year");
         dateSpinner = new DateSpinner();
 
         JLabel jlFileType = new JLabel("File type");
-        jcbFileType = new JComboBox(new String[] {"xslx", "csv", "pdf"});
+        jcbFileType = new JComboBox(new String[] {"xls", "csv", "pdf"});
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton jbCancel = new JButton("Cancel");
@@ -89,7 +101,7 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
     }
 
     private boolean isFilledOut() {
-        if (jtfReportTitle.getText().isEmpty() || jtaReportFooter.getText().isEmpty()) {
+        if (jtfReportTitle.getText().isEmpty()) {
             return false;
         }
         return true;
@@ -101,13 +113,25 @@ public class ReportWizardDialog extends JDialog implements ActionListener {
             String title = jtfReportTitle.getText().toUpperCase();
             String footer = jtaReportFooter.getText();
             Calendar cal = Calendar.getInstance();
-            Date start = dateSpinner.getDate();
+            cal.setTime(dateSpinner.getDate());
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+            cal.set(Calendar.MONTH, Calendar.JANUARY);
+            Date start = cal.getTime();
+            cal.set(Calendar.DAY_OF_MONTH, 31);
+            cal.set(Calendar.MONTH, Calendar.DECEMBER);
+            Date end = cal.getTime();
 
             new XSLXReport(title, footer, start, end);
 
             mainWindow.changeCenterPanelToReportTable(start, end);
+            this.setVisible(false);
         } else {
-            JOptionPane.showMessageDialog(null, "not filled out or dates are wrong");
+            JOptionPane.showMessageDialog(null, "not filled out");
         }
+    }
+
+    public void changeYear(int year) {
+        String title = year + " WEST 2 YFC ACTIVITY REPORT";
+        jtfReportTitle.setText(title);
     }
 }

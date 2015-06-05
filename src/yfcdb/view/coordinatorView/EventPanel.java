@@ -97,6 +97,11 @@ public class EventPanel extends EventFormPanel {
 
     @Override
     public boolean isFilledOut() {
+        try {
+            Integer.parseInt(jtfRegFee.getText());
+        } catch (Exception e) {
+            return false;
+        }
         if (jcbEventType.getSelectedItem().equals("") || jtfVenue.getText().equals("")
                 || jtfRegFee.getText().equals("")) {
             return false;

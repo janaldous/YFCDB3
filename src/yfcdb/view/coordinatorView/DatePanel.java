@@ -13,11 +13,17 @@ public class DatePanel extends JPanel implements ActionListener {
     private static final int yearRange = 23;
     protected final JSpinner spinner;
     protected final SpinnerDateModel model;
+    private CoordinatorInfoPanel.BriefingPanel briefingPanel1;
     private MemberInfoPanel.BriefingPanel briefingPanel;
 
     public DatePanel(MemberInfoPanel.BriefingPanel briefingPanel) {
         this();
         this.briefingPanel = briefingPanel;
+    }
+
+    public DatePanel(CoordinatorInfoPanel.BriefingPanel briefingPanel1) {
+        this();
+        this.briefingPanel1 = briefingPanel1;
     }
 
     public DatePanel() {
@@ -70,6 +76,10 @@ public class DatePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        briefingPanel.setAge(getYearsFromToday());
+        if (briefingPanel == null) {
+            briefingPanel1.setAge(getYearsFromToday());
+        } else {
+            briefingPanel.setAge(getYearsFromToday());
+        }
     }
 }

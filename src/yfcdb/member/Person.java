@@ -13,6 +13,7 @@ public class Person {
     protected String username, password;
     protected static int numberOfMembers = 0;
 
+    protected Address address;
     protected String id;
     protected Position position;
     protected String firstname, middlename, lastname, nickname;
@@ -22,11 +23,15 @@ public class Person {
     protected String email;
     protected Date birthday;
     protected final static SimpleDateFormat dt = new SimpleDateFormat("MM/dd/yyyy");
+    protected int yfcEntryYear;
+    protected ShirtSize shirtSize;
 
     public Person() {
         setID(numberOfMembers++);
         setUsername();
         setDateUpdated();
+
+        address = new Address();
     }
 
     public Person(Position pos, String fn, String mn, String ln, String nn, YFCGroup group) {
@@ -233,6 +238,35 @@ public class Person {
 
     public Object[] toArray() {
         return new Object[] {this, position, lastname, firstname, dt.format(birthday), cellphoneNumber};
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public int getYfcAge() {
+        Calendar cal = Calendar.getInstance();
+        return cal.get(Calendar.YEAR) - yfcEntryYear;
+    }
+
+    public int getYfcEntryYear() {
+        return this.yfcEntryYear;
+    }
+
+    public void setYfcEntryYear(int yfcEntryYear) {
+        this.yfcEntryYear = yfcEntryYear;
+    }
+
+    public ShirtSize getShirtSize() {
+        return shirtSize;
+    }
+
+    public void setShirtSize(ShirtSize shirtSize) {
+        this.shirtSize = shirtSize;
     }
 
     @Override

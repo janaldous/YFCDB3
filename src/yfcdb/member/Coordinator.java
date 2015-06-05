@@ -5,6 +5,7 @@ package yfcdb.member;
  */
 public class Coordinator extends Person {
     private Prefix prefix;
+    private ShirtSize shirtSize;
 
     public Coordinator(Prefix prefix, String fn, String mn, String ln, String nn, YFCGroup group) {
         setID(numberOfMembers++);
@@ -52,5 +53,13 @@ public class Coordinator extends Person {
             relationship = "Father";
         }
         return new EmergencyContact(this.toParent(), getFullName(), relationship, getCellphoneNumber());
+    }
+
+    public Prefix getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(Prefix prefix) {
+        this.prefix = prefix;
     }
 }

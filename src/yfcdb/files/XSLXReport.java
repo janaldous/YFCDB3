@@ -1,5 +1,6 @@
 package yfcdb.files;
 
+import com.cedarsoftware.util.io.JsonWriter;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -7,9 +8,8 @@ import org.apache.poi.ss.util.CellUtil;
 import yfcdb.events.*;
 import yfcdb.member.PersonList;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.swing.*;
+import java.io.*;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -151,7 +151,7 @@ public class XSLXReport {
         String coordinators = "COORDINATORS: " + PersonList.getInstance().getCoordinators();
 
         int groupColumn = 0;
-        int leadersColumn = 7;
+        int leadersColumn = 19;
 
         Row row = sheet.createRow(0);
 
@@ -362,15 +362,28 @@ public class XSLXReport {
     }
 
     private void saveToFile() {
-        FileOutputStream fileOut = null;
-        try {
-            fileOut = new FileOutputStream("trial.xls");
-            wb.write(fileOut);
-            fileOut.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        javax.swing.JFileChooser fc = new javax.swing.JFileChooser("/Downloads");
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fc.setDialogTitle("Go to the folder where you want it saved");
+        int returnVal = fc.showOpenDialog(null);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getCurrentDirectory();
+            System.out.println(file);
+            //This is where a real application would open the file.
+
+            FileOutputStream fileOut = null;
+            try {
+                fileOut = new FileOutputStream(title+".xls");
+                wb.write(fileOut);
+                fileOut.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            JOptionPane.showMessageDialog(null, "Saved");
         }
     }
 }
