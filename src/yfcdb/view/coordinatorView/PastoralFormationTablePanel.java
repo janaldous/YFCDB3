@@ -3,6 +3,7 @@ package yfcdb.view.coordinatorView;
 import yfcdb.events.Event;
 import yfcdb.events.EventList;
 import yfcdb.events.EventType;
+import yfcdb.events.Role;
 import yfcdb.member.Person;
 import yfcdb.member.PersonList;
 
@@ -14,6 +15,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by janaldoustorres on 05/06/15.
@@ -79,10 +83,18 @@ public class PastoralFormationTablePanel extends JPanel implements TablePanelTem
 
         EventList eventList = EventList.getInstance();
         ArrayList<Event> eventArrayList = eventList.getEventsOfType(type);
+
         for (Event event: eventArrayList) {
-            for (Person person: event.getPersonsWhoAttended()) {
+            HashMap<Person, Role> personRoleHashMap = event.getAttendees();
+
+            Iterator iterator = personRoleHashMap.entrySet().iterator();
+
+            while (iterator.hasNext()) {
+                Map.Entry pair = (Map.Entry)iterator.next();
                 //add to model if person attended
-                Object[] array = {type, person.getShortName(), dt.format(event.getStartDate())};
+                Person person = (Person)pair.getKey();
+                Role role = (Role)pair.getValue();
+                Object[] array = {type, person.getShortName(), role, dt.format(event.getStartDate())};
                 defaultTableModel.addRow(array);
                 //remove from list if attended
                 personNotAttendedArrayList.remove(person);

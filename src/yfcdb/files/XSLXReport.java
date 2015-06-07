@@ -362,28 +362,17 @@ public class XSLXReport {
     }
 
     private void saveToFile() {
-        javax.swing.JFileChooser fc = new javax.swing.JFileChooser("/Downloads");
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fc.setDialogTitle("Go to the folder where you want it saved");
-        int returnVal = fc.showOpenDialog(null);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getCurrentDirectory();
-            System.out.println(file);
-            //This is where a real application would open the file.
-
-            FileOutputStream fileOut = null;
-            try {
-                fileOut = new FileOutputStream(title+".xls");
-                wb.write(fileOut);
-                fileOut.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            JOptionPane.showMessageDialog(null, "Saved");
+        FileOutputStream fileOut = null;
+        try {
+            fileOut = new FileOutputStream(title+".xls");
+            wb.write(fileOut);
+            fileOut.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        JOptionPane.showMessageDialog(null, "Saved");
     }
 }

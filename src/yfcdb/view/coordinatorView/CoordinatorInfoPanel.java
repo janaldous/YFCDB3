@@ -49,8 +49,6 @@ public class CoordinatorInfoPanel extends JPanel implements PersonInfoPanelTempl
 
             JLabel jlPosition = new JLabel("YFC Position:");
             jcbPosition = new JComboBox<Position>(new Position[] {Position.COORDINATOR});
-            jcbPosition.setSelectedItem(Position.COORDINATOR);
-
 
             String[] yfcAgeList = new String[ageRange];
             final int currentYear = Calendar.getInstance().get(Calendar.YEAR);
